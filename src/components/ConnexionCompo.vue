@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import logo from '@/assets/logo.png'
 import FooterCompo from './FooterCompo.vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+function goToCreateUser() {
+  router.push('/creationUser')
+}
 </script>
 
 <template>
@@ -47,6 +54,8 @@ import FooterCompo from './FooterCompo.vue'
           Si vous ne possédez pas de compte, vous pouvez en créer un en cliquant ici :
         </p>
         <button
+          type="button"
+          @click="goToCreateUser"
           class="border border-[#635950] rounded px-3 py-2 bg-[#635950] text-[#FFF5E1] font-[Anta]"
         >
           Se créer un compte

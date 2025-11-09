@@ -78,3 +78,7 @@ CREATE TABLE furniture (
     orders_id INT NOT NULL,
     FOREIGN KEY (orders_id) REFERENCES orders(id)
 );
+
+-- @block
+INSERT INTO user (firstname, lastname, email, password, role, created_at, updated_at)
+VALUES ('Lauréline', 'Fleury', 'l.fleury@test.fr', 'admin', 'test1234', '2025-11-06', '2025-11-06')
