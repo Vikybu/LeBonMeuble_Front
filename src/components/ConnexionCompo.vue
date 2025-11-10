@@ -2,11 +2,39 @@
 import logo from '@/assets/logo.png'
 import FooterCompo from './FooterCompo.vue'
 import { useRouter } from 'vue-router'
+import { ref } from 'vue'
+
+const user = ref({
+  email: '',
+  password: '',
+})
+
+const URL = 'http://localhost:8080'
 
 const router = useRouter()
 
 function goToCreateUser() {
   router.push('/creationUser')
+}
+
+async function connexion() {
+  const response = await fetch(`${URL}/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(user.value),
+  })
+
+  if (!response.ok) {
+    alert('Email ou mot de passe incorrect')
+    return
+  }
+
+  const data = await response.json()
+  localStorage.setItem('token', data.token)
+
+  const prenom = data.firstname
+
+  router.push({ name: 'HomePage', params: { firstname: prenom } })
 }
 </script>
 
@@ -23,14 +51,25 @@ function goToCreateUser() {
       </p>
 
       <form
+        @submit.prevent="connexion"
         class="w-full max-w-sm bg-[#A45338] shadow-lg rounded-2xl p-6 flex flex-col items-center justify-center gap-6"
       >
         <div class="w-full flex flex-col gap-1">
           <label class="text-[#FFF5E1] font-[Anta]" for="email">Email de connexion</label>
-          <input class="border border-[#FFF5E1] rounded px-3 py-2" id="email" type="email" />
+          <input
+            v-model="user.email"
+            class="border border-[#FFF5E1] rounded px-3 py-2"
+            id="email"
+            type="email"
+          />
 
           <label class="text-[#FFF5E1] font-[Anta]" for="password">Mot de passe</label>
-          <input class="border border-[#FFF5E1] rounded px-3 py-2" id="password" type="password" />
+          <input
+            v-model="user.password"
+            class="border border-[#FFF5E1] rounded px-3 py-2"
+            id="password"
+            type="password"
+          />
         </div>
 
         <div class="flex gap-10">

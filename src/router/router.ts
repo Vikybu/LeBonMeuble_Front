@@ -7,6 +7,7 @@ const routes = [
   { path: '/', component: HomePage },
   { path: '/connexion', component: ConnexionCompo },
   { path: '/creationUser', component: CreationUser },
+  { path: '/homePage/${firstname}', component: HomePage },
 ]
 
 export default createRouter({
