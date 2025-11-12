@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 
-const URL = 'http://localhost:8080'
-
 async function getFurniture() {
   try {
-    const response = await fetch(`${URL}/furniture/sell`)
+    const response = await fetch(`${URL}/furniture/color`)
     return (furniture.value = await response.json())
   } catch (error) {
     console.error('Erreur chargement des meubles en vente :', error)

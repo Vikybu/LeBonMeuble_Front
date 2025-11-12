@@ -7,7 +7,6 @@ import { computed } from 'vue'
 const auth = useAuthStore()
 const router = useRouter()
 
-// Computed pour que ça reste réactif
 const isLoggedIn = computed(() => auth.isLoggedIn)
 const firstname = computed(() => auth.firstname)
 

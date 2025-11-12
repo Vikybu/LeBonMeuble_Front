@@ -1,12 +1,51 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import HeaderCompo from './HeaderCompo.vue'
+import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
 
-const showPopup = ref(false)
-const popupMessage = ref('')
-const errorMessage = ref('')
+const router = useRouter()
 
-const furniture = ref({
+// === Interfaces ===
+interface Color {
+  id: number
+  name: string
+}
+
+interface Type {
+  id: number
+  name: string
+}
+
+interface Material {
+  id: number
+  name: string
+}
+
+interface FurnitureForm {
+  name: string
+  description: string
+  status: string
+  price: string
+  width: string
+  height: string
+  length: string
+  image: File | null
+}
+
+// === Constantes ===
+const API_URL = 'http://localhost:8080'
+
+// === Références réactives ===
+const colors = ref<Color[]>([])
+const types = ref<Type[]>([])
+const materials = ref<Material[]>([])
+
+const selectedColor = ref<number | null>(null)
+const selectedType = ref<number | null>(null)
+const selectedMaterial = ref<number | null>(null)
+
+const furniture = ref<FurnitureForm>({
   name: '',
   description: '',
   status: 'en_attente',
@@ -14,144 +53,320 @@ const furniture = ref({
   width: '',
   height: '',
   length: '',
-  type: '',
-  material: '',
-  color: '',
-  image: '',
+  image: null,
 })
 
-async function addFurniture() {
-  errorMessage.value = ''
-  if (!ValidateForm()) return
+// === Gestion des messages ===
+const showPopup = ref(false)
+const popupMessage = ref('')
+const errorMessage = ref('')
 
-  const response = await fetch(`${URL}/creationUser`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(furniture.value),
-  })
-  const message = await response.text()
-  console.log(message)
-  if (response.ok) {
-    showPopUp('Meuble créé avec succès !')
-  } else {
-    if (message.includes('Email already in use')) {
-      showPopUp('Cet email est déjà utilisé. Vous ne pouvez pas créer ce compte.')
-    } else {
-      showPopUp("Un problème est survenu, merci d'essayer plus tard")
-    }
-
-    furniture.value = {
-      name: '',
-      description: '',
-      status: 'en_attente',
-      price: '',
-      width: '',
-      height: '',
-      length: '',
-      type: '',
-      material: '',
-      color: '',
-      image: '',
-    }
+// === Fonctions de chargement des listes ===
+async function getColorFurniture(): Promise<void> {
+  try {
+    const response = await fetch(`${API_URL}/color`)
+    if (!response.ok) throw new Error('Erreur lors du chargement des couleurs')
+    colors.value = await response.json()
+  } catch (error) {
+    console.error(error)
   }
 }
 
-function ValidateForm() {
+async function getTypeFurniture(): Promise<void> {
+  try {
+    const response = await fetch(`${API_URL}/type`)
+    if (!response.ok) throw new Error('Erreur lors du chargement des types')
+    types.value = await response.json()
+    console.log('📦 Types reçus :', types)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+async function getMaterialFurniture(): Promise<void> {
+  try {
+    const response = await fetch(`${API_URL}/material`)
+    if (!response.ok) throw new Error('Erreur lors du chargement des matériaux')
+    materials.value = await response.json()
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+// === Validation du formulaire ===
+function validateForm() {
+  console.log('📋 Validation du formulaire')
   if (
-    furniture.value.name == '' ||
-    furniture.value.description == '' ||
-    furniture.value.price == ''
+    furniture.value.name === '' ||
+    furniture.value.description === '' ||
+    furniture.value.price === '' ||
+    !furniture.value.image
   ) {
-    errorMessage.value = '/!\\ Tous les champs ne sont pas remplis'
+    errorMessage.value = '/!\\ Tous les champs obligatoires ne sont pas remplis'
+    console.log('🔴 Validation échouée')
     return false
   }
+  console.log('✅ Validation OK')
   return true
 }
 
-function showPopUp(message: string) {
+function goToHomePage() {
+  router.push('/HomePage')
+}
+
+// === Fonction d’envoi ===
+async function addFurniture(): Promise<void> {
+  console.log('🟢 Soumission du meuble démarrée')
+
+  errorMessage.value = ''
+  if (!validateForm()) return
+
+  const authStore = useAuthStore()
+  const userId = authStore.userInfo?.id
+
+  if (!userId) {
+    showPopUp('❌ Aucun utilisateur connecté : impossible d’ajouter le meuble')
+    console.error('Aucun utilisateur trouvé dans le store')
+    return
+  }
+
+  if (!selectedType.value || !selectedMaterial.value || !selectedColor.value) {
+    showPopUp('❌ Merci de sélectionner un type, un matériau et une couleur')
+    return
+  }
+
+  const formData = new FormData()
+  formData.append('name', furniture.value.name)
+  formData.append('description', furniture.value.description)
+  formData.append('price', furniture.value.price)
+  formData.append('status', 'en_attente')
+  formData.append('width', furniture.value.width)
+  formData.append('height', furniture.value.height)
+  formData.append('length', furniture.value.length)
+  formData.append('user_id', userId.toString())
+  formData.append('type_id', selectedType.value.toString())
+  formData.append('material_id', selectedMaterial.value.toString())
+  formData.append('color_id', selectedColor.value.toString())
+  formData.append('image', furniture.value.image!)
+
+  console.log('📦 FormData envoyée :', Object.fromEntries(formData.entries()))
+
+  try {
+    const response = await fetch(`${API_URL}/addFurniture`, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${authStore.token}`,
+      },
+    })
+
+    const message = await response.text()
+
+    if (response.ok) {
+      showPopUp('✅ Meuble ajouté avec succès !')
+      resetForm()
+    } else {
+      showPopUp('❌ Erreur lors de l’envoi : ' + message)
+      console.error('Erreur backend :', message)
+    }
+  } catch (error) {
+    console.error(error)
+    showPopUp('❌ Erreur de communication avec le serveur.')
+  }
+
+  for (const [key, value] of formData.entries()) {
+    console.log('➡️', key, value)
+  }
+}
+
+// === Helpers ===
+function resetForm(): void {
+  furniture.value = {
+    name: '',
+    description: '',
+    status: 'en_attente',
+    price: '',
+    width: '',
+    height: '',
+    length: '',
+    image: null,
+  }
+  selectedColor.value = null
+  selectedType.value = null
+  selectedMaterial.value = null
+}
+
+function showPopUp(message: string): void {
   popupMessage.value = message
   showPopup.value = true
-  setTimeout(() => {
-    showPopup.value = false
-  }, 3000)
+  setTimeout(() => (showPopup.value = false), 3000)
 }
+
+// === Initialisation ===
+onMounted(() => {
+  getColorFurniture()
+  getTypeFurniture()
+  getMaterialFurniture()
+})
 </script>
 
 <template>
   <HeaderCompo />
-  <h1>Mettre un meuble en vente</h1>
+  <h1 class="text-center font-[Anta] text-[#FFF5E1] bg-[#635950] p-[1%] text-[2rem]">
+    Formulaire de mise en vente d'un meuble
+  </h1>
+
   <div class="min-h-screen bg-[#635950]">
     <p class="text-center font-[Anta] text-[#FFF5E1] bg-[#635950] p-[1%]">{{ errorMessage }}</p>
-    <div>
-      <form class="flex flex-col justify-center items-center gap-6" @submit.prevent="addFurniture">
-        <div class="flex flex-col text-center">
-          <label class="text-[#FFF5E1] font-[Anta]" for="name">Nom du meuble *</label>
-          <input
-            v-model="furniture.name"
-            class="border border-[#FFF5E1] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
-            id="name"
-            type="text"
-          />
-        </div>
-        <div class="flex flex-col text-center">
-          <label class="text-[#FFF5E1] font-[Anta]" for="description">Description *</label>
-          <input
-            v-model="furniture.description"
-            class="border border-[#FFF5E1] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
-            id="description"
-            type="textarea"
-          />
-        </div>
-        <div class="flex flex-col text-center">
-          <label class="text-[#FFF5E1] font-[Anta]" for="price">Prix *</label>
-          <input
-            v-model="furniture.price"
-            class="border border-[#FFF5E1] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
-            id="price"
-            type="text"
-          />
-        </div>
-        <div class="flex flex-col text-center">
+
+    <form class="flex flex-col justify-center items-center gap-6" @submit.prevent="addFurniture">
+      <!-- Nom -->
+      <div class="flex flex-col text-center">
+        <label class="text-[#FFF5E1] font-[Anta]" for="name">Nom du meuble *</label>
+        <input
+          v-model="furniture.name"
+          id="name"
+          type="text"
+          class="border border-[#FFF5E1] rounded px-3 py-2 text-[#FFF5E1] bg-transparent focus:ring-2 focus:ring-[#FFF5E1]"
+        />
+      </div>
+
+      <!-- Description -->
+      <div class="flex flex-col text-center">
+        <label class="text-[#FFF5E1] font-[Anta]" for="description">Description *</label>
+        <textarea
+          v-model="furniture.description"
+          id="description"
+          class="border border-[#FFF5E1] rounded px-3 py-2 text-[#FFF5E1] bg-transparent focus:ring-2 focus:ring-[#FFF5E1]"
+        ></textarea>
+      </div>
+
+      <!-- Prix -->
+      <div class="flex flex-col text-center">
+        <label class="text-[#FFF5E1] font-[Anta]" for="price">Prix *</label>
+        <input
+          v-model="furniture.price"
+          id="price"
+          type="number"
+          step="0.01"
+          class="border border-[#FFF5E1] rounded px-3 py-2 text-[#FFF5E1] bg-transparent focus:ring-2 focus:ring-[#FFF5E1]"
+        />
+      </div>
+
+      <!-- Dimensions -->
+      <div class="grid grid-cols-3 gap-4 text-center">
+        <div>
           <label class="text-[#FFF5E1] font-[Anta]" for="width">Largeur</label>
           <input
             v-model="furniture.width"
-            class="border border-[#FFF5E1] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
             id="width"
             type="text"
+            class="border border-[#FFF5E1] rounded px-3 py-2 text-[#FFF5E1] bg-transparent"
           />
         </div>
-        <div class="flex flex-col text-center">
+        <div>
           <label class="text-[#FFF5E1] font-[Anta]" for="height">Hauteur</label>
           <input
             v-model="furniture.height"
-            class="border border-[#FFF5E1] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
             id="height"
             type="text"
+            class="border border-[#FFF5E1] rounded px-3 py-2 text-[#FFF5E1] bg-transparent"
           />
         </div>
-        <div class="flex flex-col text-center">
+        <div>
           <label class="text-[#FFF5E1] font-[Anta]" for="length">Longueur</label>
           <input
             v-model="furniture.length"
-            class="border border-[#FFF5E1] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
             id="length"
             type="text"
+            class="border border-[#FFF5E1] rounded px-3 py-2 text-[#FFF5E1] bg-transparent"
           />
         </div>
-        <div class="flex flex-row gap-10">
-          <button
-            type="submit"
-            class="border border-[#FFF5E1] rounded px-3 py-2 bg-[#FFF5E1] text-[#A45338] font-[Anta]"
+      </div>
+
+      <!-- Sélecteurs -->
+      <div class="flex flex-col gap-4 text-center">
+        <div>
+          <label class="text-[#FFF5E1] font-[Anta]">Type de meuble *</label>
+          <select
+            v-model="selectedType"
+            class="border border-[#A45338] rounded-lg px-3 py-2 w-full bg-[#FFF5E1] text-[#3B2F2F] font-[Anta] focus:ring-2 focus:ring-[#A45338]"
           >
-            Soummettre le meuble à la vérification
-          </button>
-          <button
-            class="border border-[#FFF5E1] rounded px-3 py-2 bg-[#FFF5E1] text-[#A45338] font-[Anta]"
-          >
-            Annuler
-          </button>
+            <option value="" disabled>-- Sélectionner --</option>
+            <option v-for="type in types" :key="type.id" :value="type.id">{{ type.name }}</option>
+          </select>
         </div>
-      </form>
-    </div>
+
+        <div>
+          <label class="text-[#FFF5E1] font-[Anta]">Matériau *</label>
+          <select
+            v-model="selectedMaterial"
+            class="border border-[#A45338] rounded-lg px-3 py-2 w-full bg-[#FFF5E1] text-[#3B2F2F] font-[Anta] focus:ring-2 focus:ring-[#A45338]"
+          >
+            <option value="" disabled>-- Sélectionner --</option>
+            <option v-for="mat in materials" :key="mat.id" :value="mat.id">{{ mat.name }}</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-[#FFF5E1] font-[Anta]">Couleur *</label>
+          <select
+            v-model="selectedColor"
+            class="border border-[#A45338] rounded-lg px-3 py-2 w-full bg-[#FFF5E1] text-[#3B2F2F] font-[Anta] focus:ring-2 focus:ring-[#A45338]"
+          >
+            <option value="" disabled>-- Sélectionner --</option>
+            <option v-for="color in colors" :key="color.id" :value="color.id">
+              {{ color.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Upload image -->
+      <div class="flex flex-col text-center">
+        <label class="text-[#FFF5E1] font-[Anta]" for="image">Image du meuble *</label>
+        <input
+          id="image"
+          type="file"
+          accept="image/*"
+          class="text-[#FFF5E1]"
+          @change="
+            (e: Event) => {
+              const target = e.target as HTMLInputElement
+              if (target.files && target.files[0]) {
+                furniture.image = target.files[0]
+              }
+            }
+          "
+        />
+      </div>
+
+      <!-- Boutons -->
+      <div class="flex flex-row gap-10">
+        <button
+          type="submit"
+          class="border border-[#FFF5E1] rounded px-3 py-2 bg-[#FFF5E1] text-[#A45338] font-[Anta]"
+        >
+          Soumettre
+        </button>
+        <button
+          type="button"
+          @click="goToHomePage"
+          class="border border-[#FFF5E1] rounded px-3 py-2 bg-[#FFF5E1] text-[#A45338] font-[Anta]"
+        >
+          Retour à l'accueil
+        </button>
+      </div>
+    </form>
+
+    <!-- Popup -->
+    <transition name="fade">
+      <div
+        v-if="showPopup"
+        class="fixed bottom-5 right-5 bg-[#FFF5E1] text-[#A45338] px-6 py-3 rounded-xl shadow-lg font-[Anta]"
+      >
+        {{ popupMessage }}
+      </div>
+    </transition>
   </div>
 </template>
