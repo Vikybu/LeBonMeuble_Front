@@ -3,20 +3,11 @@ import logo from '@/assets/logo.png'
 import FooterCompo from './FooterCompo.vue'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
-import * as jwtDecode from 'jwt-decode'
-
+import { useAuthStore } from '@/stores/auth'
 
 interface User {
   email: string
   password: string
-}
-
-interface JwtPayload {
-  sub: string
-  firstname: string
-  role: string
-  exp: number
-  iat: number
 }
 
 const user = ref<User>({
@@ -26,6 +17,7 @@ const user = ref<User>({
 
 const URL = 'http://localhost:8080'
 const router = useRouter()
+const auth = useAuthStore()
 
 function goToCreateUser() {
   router.push('/creationUser')
@@ -47,21 +39,17 @@ async function connexion() {
     const data = await response.json()
     const token = data.token
     console.log(token)
-    localStorage.setItem('token', token) // stocke le token
 
-    // Décodage du token
-    const decoded: JwtPayload = jwtDecode.jwtDecode(token);
-    console.log(decoded)
-    const prenom = decoded.firstname
+    // stocker le token dans le store (réactif)
+    auth.login(token)
 
-    router.push({ name: 'HomePage', params: { firstname: prenom } })
+    router.push('/homePage')
   } catch (error) {
     console.error('Erreur lors de la connexion :', error)
     alert('Une erreur est survenue lors de la connexion')
   }
 }
 </script>
-
 
 <template>
   <div class="min-h-screen flex flex-col bg-[#FFF5E1]">
