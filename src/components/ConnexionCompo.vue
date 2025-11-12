@@ -3,14 +3,28 @@ import logo from '@/assets/logo.png'
 import FooterCompo from './FooterCompo.vue'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+import * as jwtDecode from 'jwt-decode'
 
-const user = ref({
+
+interface User {
+  email: string
+  password: string
+}
+
+interface JwtPayload {
+  sub: string
+  firstname: string
+  role: string
+  exp: number
+  iat: number
+}
+
+const user = ref<User>({
   email: '',
   password: '',
 })
 
 const URL = 'http://localhost:8080'
-
 const router = useRouter()
 
 function goToCreateUser() {
@@ -18,25 +32,36 @@ function goToCreateUser() {
 }
 
 async function connexion() {
-  const response = await fetch(`${URL}/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(user.value),
-  })
+  try {
+    const response = await fetch(`${URL}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(user.value),
+    })
 
-  if (!response.ok) {
-    alert('Email ou mot de passe incorrect')
-    return
+    if (!response.ok) {
+      alert('Email ou mot de passe incorrect')
+      return
+    }
+
+    const data = await response.json()
+    const token = data.token
+    console.log(token)
+    localStorage.setItem('token', token) // stocke le token
+
+    // Décodage du token
+    const decoded: JwtPayload = jwtDecode.jwtDecode(token);
+    console.log(decoded)
+    const prenom = decoded.firstname
+
+    router.push({ name: 'HomePage', params: { firstname: prenom } })
+  } catch (error) {
+    console.error('Erreur lors de la connexion :', error)
+    alert('Une erreur est survenue lors de la connexion')
   }
-
-  const data = await response.json()
-  localStorage.setItem('token', data.token)
-
-  const prenom = data.firstname
-
-  router.push({ name: 'HomePage', params: { firstname: prenom } })
 }
 </script>
+
 
 <template>
   <div class="min-h-screen flex flex-col bg-[#FFF5E1]">

@@ -13,7 +13,7 @@ const user = ref({
   lastname: '',
   email: '',
   password: '',
-  role: 'user',
+  role: 'USER',
 })
 
 const URL = 'http://localhost:8080'
