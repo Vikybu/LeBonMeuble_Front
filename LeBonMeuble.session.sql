@@ -135,5 +135,16 @@ ON DELETE SET NULL ON UPDATE CASCADE;
 -- @block 
 DESCRIBE furniture;
 
+-- @block
+UPDATE user
+SET role = 'USER';
+
+-- @block
+DELETE FROM user
+WHERE id = 1;
+
+-- @block
+UPDATE furniture
+SET status = 'on_hold';
 
 

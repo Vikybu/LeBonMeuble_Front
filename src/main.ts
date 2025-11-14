@@ -1,12 +1,17 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
+import router from './router/router'
 import './assets/main.css'
-import router from './router/router.ts'
+import { useAuthStore } from '@/stores/auth'
 
 const app = createApp(App)
 const pinia = createPinia()
 
 app.use(pinia)
+
+const auth = useAuthStore()
+auth.initialize()
+
 app.use(router)
-app.mount('#app')
+router.isReady().then(() => app.mount('#app'))

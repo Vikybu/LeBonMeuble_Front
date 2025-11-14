@@ -106,9 +106,25 @@
         </g>
       </svg>
     </div>
-    <div>
-      <p class="bg-[#635950] text-[#FFF5E1] font-[Anta]">Contact</p>
-      <p class="bg-[#635950] text-[#FFF5E1] font-[Anta] text-[0.7rem]">Lauréline</p>
+    <div class="flex flex-row justify-between items-center bg-[#635950] p-3">
+      <div>
+        <p class="bg-[#635950] text-[#FFF5E1] font-[Anta]">Contact</p>
+        <p class="bg-[#635950] text-[#FFF5E1] font-[Anta] text-[0.7rem]">Lauréline FLEURY</p>
+        <p class="bg-[#635950] text-[#FFF5E1] font-[Anta] text-[0.7rem]">l.fleury@test.fr</p>
+        <p class="bg-[#635950] text-[#FFF5E1] font-[Anta] text-[0.7rem]">
+          20 rue Lortet 69008 Lyon
+        </p>
+      </div>
+      <div>
+        <p class="bg-[#635950] text-[#FFF5E1] font-[Anta]">Détails</p>
+        <p class="bg-[#635950] text-[#FFF5E1] font-[Anta] text-[0.7rem]">
+          Le Bon Meuble est un site d'achat/vente de meubles d'occasions en ligne.
+        </p>
+        <p class="bg-[#635950] text-[#FFF5E1] font-[Anta] text-[0.7rem]">
+          Tous les meubles mis en vente sont vérifiés avant d'être validé et mis en ligne pour la
+          vente.
+        </p>
+      </div>
     </div>
   </footer>
 </template>

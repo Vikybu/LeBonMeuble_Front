@@ -34,7 +34,7 @@ interface FurnitureForm {
 }
 
 // === Constantes ===
-const API_URL = 'http://localhost:8080'
+const URL = 'http://localhost:8080'
 
 // === Références réactives ===
 const colors = ref<Color[]>([])
@@ -64,7 +64,7 @@ const errorMessage = ref('')
 // === Fonctions de chargement des listes ===
 async function getColorFurniture(): Promise<void> {
   try {
-    const response = await fetch(`${API_URL}/color`)
+    const response = await fetch(`${URL}/color`)
     if (!response.ok) throw new Error('Erreur lors du chargement des couleurs')
     colors.value = await response.json()
   } catch (error) {
@@ -74,7 +74,7 @@ async function getColorFurniture(): Promise<void> {
 
 async function getTypeFurniture(): Promise<void> {
   try {
-    const response = await fetch(`${API_URL}/type`)
+    const response = await fetch(`${URL}/type`)
     if (!response.ok) throw new Error('Erreur lors du chargement des types')
     types.value = await response.json()
     console.log('📦 Types reçus :', types)
@@ -85,7 +85,7 @@ async function getTypeFurniture(): Promise<void> {
 
 async function getMaterialFurniture(): Promise<void> {
   try {
-    const response = await fetch(`${API_URL}/material`)
+    const response = await fetch(`${URL}/material`)
     if (!response.ok) throw new Error('Erreur lors du chargement des matériaux')
     materials.value = await response.json()
   } catch (error) {
@@ -95,7 +95,6 @@ async function getMaterialFurniture(): Promise<void> {
 
 // === Validation du formulaire ===
 function validateForm() {
-  console.log('📋 Validation du formulaire')
   if (
     furniture.value.name === '' ||
     furniture.value.description === '' ||
@@ -103,10 +102,8 @@ function validateForm() {
     !furniture.value.image
   ) {
     errorMessage.value = '/!\\ Tous les champs obligatoires ne sont pas remplis'
-    console.log('🔴 Validation échouée')
     return false
   }
-  console.log('✅ Validation OK')
   return true
 }
 
@@ -116,8 +113,6 @@ function goToHomePage() {
 
 // === Fonction d’envoi ===
 async function addFurniture(): Promise<void> {
-  console.log('🟢 Soumission du meuble démarrée')
-
   errorMessage.value = ''
   if (!validateForm()) return
 
@@ -125,13 +120,13 @@ async function addFurniture(): Promise<void> {
   const userId = authStore.userInfo?.id
 
   if (!userId) {
-    showPopUp('❌ Aucun utilisateur connecté : impossible d’ajouter le meuble')
+    showPopUp('Aucun utilisateur connecté : impossible d’ajouter le meuble')
     console.error('Aucun utilisateur trouvé dans le store')
     return
   }
 
   if (!selectedType.value || !selectedMaterial.value || !selectedColor.value) {
-    showPopUp('❌ Merci de sélectionner un type, un matériau et une couleur')
+    showPopUp(' Merci de sélectionner un type, un matériau et une couleur')
     return
   }
 
@@ -152,7 +147,7 @@ async function addFurniture(): Promise<void> {
   console.log('📦 FormData envoyée :', Object.fromEntries(formData.entries()))
 
   try {
-    const response = await fetch(`${API_URL}/addFurniture`, {
+    const response = await fetch(`${URL}/furniture`, {
       method: 'POST',
       body: formData,
       headers: {
@@ -173,10 +168,9 @@ async function addFurniture(): Promise<void> {
     console.error(error)
     showPopUp('❌ Erreur de communication avec le serveur.')
   }
-
-  for (const [key, value] of formData.entries()) {
-    console.log('➡️', key, value)
-  }
+  setTimeout(() => {
+    goToHomePage()
+  }, 3000)
 }
 
 // === Helpers ===
@@ -351,7 +345,6 @@ onMounted(() => {
         </button>
         <button
           type="button"
-          @click="goToHomePage"
           class="border border-[#FFF5E1] rounded px-3 py-2 bg-[#FFF5E1] text-[#A45338] font-[Anta]"
         >
           Retour à l'accueil

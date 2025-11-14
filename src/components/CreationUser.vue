@@ -38,15 +38,6 @@ async function createUser() {
     } else {
       showPopUp("Un problème est survenu, merci d'essayer plus tard")
     }
-
-    user.value = {
-      firstname: '',
-      lastname: '',
-      email: '',
-      password: '',
-      role: 'user',
-    }
-    passwordVerification.value = ''
   }
 }
 

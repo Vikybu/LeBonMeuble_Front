@@ -42,8 +42,15 @@ async function connexion() {
 
     // stocker le token dans le store (réactif)
     auth.login(token)
+    const role = auth.role
 
-    router.push('/homePage')
+    if (role == 'USER') {
+      router.push('/user/homePage')
+    } else if (role == 'ADMIN') {
+      router.push('/admin/homePage')
+    } else {
+      console.warn('Rôle inconnu ou manquant dans le token :', role)
+    }
   } catch (error) {
     console.error('Erreur lors de la connexion :', error)
     alert('Une erreur est survenue lors de la connexion')
