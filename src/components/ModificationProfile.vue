@@ -68,7 +68,7 @@ onMounted(async () => {
       class="w-full max-w-sm bg-[#A45338] shadow-lg rounded-2xl p-6 flex flex-col gap-6"
       @submit.prevent="modifyInfos()"
     >
-      <h1 class="text-center text-2xl font-semibold text-[#FFF5E1]">Modifier son profil</h1>
+      <h1 class="text-center text-2xl font-[Anta] text-[#FFF5E1]">Modifier son profil</h1>
 
       <!-- Champs du formulaire -->
       <div class="flex flex-col gap-4">
@@ -78,7 +78,7 @@ onMounted(async () => {
             v-model="form.firstname"
             type="text"
             placeholder="Prénom"
-            class="border border-[#FFF5E1] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
+            class="border border-[#FFF5E1] font-[Anta] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
             id="passwordVerification"
           />
         </div>
@@ -89,7 +89,7 @@ onMounted(async () => {
             v-model="form.lastname"
             type="text"
             placeholder="Nom"
-            class="border border-[#FFF5E1] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
+            class="border border-[#FFF5E1] font-[Anta] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
             id="passwordVerification"
           />
         </div>
@@ -100,7 +100,7 @@ onMounted(async () => {
             v-model="form.email"
             type="email"
             placeholder="Adresse email"
-            class="border border-[#FFF5E1] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
+            class="border border-[#FFF5E1] font-[Anta] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
             id="passwordVerification"
           />
         </div>
@@ -111,7 +111,7 @@ onMounted(async () => {
             v-model="form.password"
             type="password"
             placeholder="Mot de passe"
-            class="border border-[#FFF5E1] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
+            class="border border-[#FFF5E1] font-[Anta] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
             id="passwordVerification"
           />
         </div>
@@ -122,7 +122,7 @@ onMounted(async () => {
           <input
             v-model="passwordVerification"
             placeholder="Vérification du mot de passe"
-            class="border border-[#FFF5E1] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
+            class="border border-[#FFF5E1] rounded font-[Anta] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
             id="passwordVerification"
             type="password"
           />
@@ -133,7 +133,7 @@ onMounted(async () => {
       <div class="flex flex-col gap-3 mt-4">
         <button
           type="submit"
-          class="w-full bg-[#FFF5E1] hover:bg-[#FFF5E1] text-[#635950] font-medium py-2 rounded-lg shadow-md transition-colors duration-200"
+          class="cursor-pointer w-full bg-[#FFF5E1] hover:bg-[#FFF5E1] text-[#635950] font-[Anta] py-2 rounded-lg shadow-md transition-colors duration-200"
         >
           Modifier
         </button>
@@ -141,7 +141,7 @@ onMounted(async () => {
         <button
           type="button"
           @click="cancelForm"
-          class="w-full bg-[#FFF5E1] hover:bg-[#FFF5E1] text-[#635950] font-medium py-2 rounded-lg shadow-md transition-colors duration-200"
+          class="cursor-pointer w-full bg-[#FFF5E1] hover:bg-[#FFF5E1] text-[#635950] font-[Anta] py-2 rounded-lg shadow-md transition-colors duration-200"
         >
           Annuler
         </button>

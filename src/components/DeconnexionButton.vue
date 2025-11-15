@@ -16,7 +16,7 @@ function logout() {
 <template>
   <button
     @click="logout"
-    class="border border-[#635950] rounded px-3 py-2 bg-[#635950] text-[#FFF5E1] font-[Anta]"
+    class="ml-auto cursor-pointer border border-[#635950] rounded px-3 py-2 bg-[#635950] text-[#FFF5E1] font-[Anta]"
   >
     Se déconnecter
   </button>

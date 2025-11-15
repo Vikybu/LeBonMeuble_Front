@@ -43,6 +43,7 @@ export const useAuthStore = defineStore('auth', {
     userInfo: (state): JwtPayload | null => state.decoded,
     firstname: (state): string | null => state.decoded?.firstname ?? null,
     role: (state): string | null => state.decoded?.role ?? null,
+    id: (state): number | null => state.decoded?.id ?? null,
   },
 
   actions: {

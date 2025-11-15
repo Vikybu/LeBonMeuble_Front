@@ -48,7 +48,7 @@ const selectedMaterial = ref<number | null>(null)
 const furniture = ref<FurnitureForm>({
   name: '',
   description: '',
-  status: 'en_attente',
+  status: 'on_hold',
   price: '',
   width: '',
   height: '',
@@ -108,7 +108,7 @@ function validateForm() {
 }
 
 function goToHomePage() {
-  router.push('/HomePage')
+  router.push('/user/homepage')
 }
 
 // === Fonction d’envoi ===
@@ -147,7 +147,7 @@ async function addFurniture(): Promise<void> {
   console.log('📦 FormData envoyée :', Object.fromEntries(formData.entries()))
 
   try {
-    const response = await fetch(`${URL}/furniture`, {
+    const response = await fetch(`${URL}/furnitures`, {
       method: 'POST',
       body: formData,
       headers: {
@@ -339,13 +339,13 @@ onMounted(() => {
       <div class="flex flex-row gap-10">
         <button
           type="submit"
-          class="border border-[#FFF5E1] rounded px-3 py-2 bg-[#FFF5E1] text-[#A45338] font-[Anta]"
+          class="cursor-pointer border border-[#FFF5E1] rounded px-3 py-2 bg-[#FFF5E1] text-[#A45338] font-[Anta]"
         >
           Soumettre
         </button>
         <button
           type="button"
-          class="border border-[#FFF5E1] rounded px-3 py-2 bg-[#FFF5E1] text-[#A45338] font-[Anta]"
+          class="cursor-pointer border border-[#FFF5E1] rounded px-3 py-2 bg-[#FFF5E1] text-[#A45338] font-[Anta]"
         >
           Retour à l'accueil
         </button>

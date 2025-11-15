@@ -24,7 +24,7 @@ const isLoggedIn = computed(() => auth.isLoggedIn)
     <HeaderCompo />
     <MenuCompo />
     <button
-      class="mr-5 self-start border border-[#635950] rounded px-4 py-2 bg-[#A45338] text-[#FFF5E1] font-[Anta] hover:bg-[#8a3e27] transition"
+      class="cursor-pointer mr-5 self-start border border-[#635950] rounded px-4 py-2 bg-[#A45338] text-[#FFF5E1] font-[Anta] hover:bg-[#8a3e27] transition"
       type="button"
       @click="goToAddFurniture"
     >

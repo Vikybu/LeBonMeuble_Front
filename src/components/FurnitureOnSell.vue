@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import HeaderCompo from './HeaderCompo.vue'
 import MenuCompo from './MenuUser.vue'
-import FlashInfosFurniture from './FlashInfosFurniture.vue'
 import { useRouter } from 'vue-router'
 import FooterCompo from './FooterCompo.vue'
+import FlashInfosFurnitureOnSell from './FlashInfosFurnitureOnSell.vue'
 
 const router = useRouter()
 
 function goToAddFurniture() {
-  router.push('furniture/add/sell')
+  router.push('/user/furniture/add/sell')
 }
 </script>
 
@@ -23,7 +23,7 @@ function goToAddFurniture() {
     >
       Vendre un meuble
     </button>
-    <FlashInfosFurniture />
+    <FlashInfosFurnitureOnSell />
   </div>
 
   <FooterCompo />

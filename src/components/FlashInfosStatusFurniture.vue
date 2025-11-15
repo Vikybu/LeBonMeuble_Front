@@ -83,7 +83,7 @@ async function updateFurnitureStatus() {
         <button
           @click="updateFurnitureStatus"
           type="button"
-          class="border px-2 py-1 rounded bg-[#A45338] text-white font-[Anta]"
+          class="cursor-pointer border px-2 py-1 rounded bg-[#A45338] text-white font-[Anta]"
         >
           Valider
         </button>

@@ -8,6 +8,7 @@ import { useAuthStore } from '@/stores/auth'
 import AdminProfile from '@/components/AdminProfile.vue'
 import UserProfile from '@/components/UserProfile.vue'
 import HomePageUser from '@/components/HomePageUser.vue'
+import FurnitureOnSell from '@/components/FurnitureOnSell.vue'
 
 const routes = [
   // 🏠 Page d'accueil publique
@@ -36,7 +37,8 @@ const routes = [
     redirect: '/user/homepage',
     children: [
       { path: 'homepage', component: HomePageUser },
-      { path: 'furniture/sell', component: AddFurniture },
+      { path: 'furniture/add/sell', component: AddFurniture },
+      { path: 'furniture/on/sell', component: FurnitureOnSell },
       { path: 'already-sell-furniture', component: AddFurniture },
       { path: 'profile', component: UserProfile },
     ],

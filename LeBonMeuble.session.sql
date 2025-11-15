@@ -145,6 +145,7 @@ WHERE id = 1;
 
 -- @block
 UPDATE furniture
-SET status = 'on_hold';
+SET status = 'on_hold'
+WHERE id=5;
 
 
