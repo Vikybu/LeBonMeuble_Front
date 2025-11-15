@@ -2,12 +2,14 @@
 import { onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const URL = 'http://localhost:8080'
 
 const furnitures = ref<Furniture[]>([])
 const authStore = useAuthStore()
 const id = authStore.id
+const router = useRouter()
 
 interface Furniture {
   id: number
@@ -64,14 +66,18 @@ function statusClass(status: string) {
   return map[status] ?? 'border-gray-400 text-gray-600 bg-gray-100'
 }
 
+function getToFurnitureDetails(id: number) {
+  router.push(`/user/furniture/${id}`)
+}
+
 onMounted(() => {
   getFurniture()
 })
 </script>
 
 <template>
-  <div class="bg-[#FFF5E1] p-10">
-    <div>
+  <div class="bg-[#FFF5E1] p-5">
+    <div class="flex flex-col gap-5">
       <div
         class="border border-[#A45338] rounded-xl p-4 flex justify-between items-start gap-6 shadow-md bg-[#FFF5E1]"
         v-for="furniture in furnitures"
@@ -88,14 +94,17 @@ onMounted(() => {
           <p class="font-[Anta] text-[#635950] text-xl font-semibold">
             {{ furniture.name }}
           </p>
-          <p class="font-[Anta] text-[#635950]">
+          <p class="font-[Anta] text-[#635950] line-clamp-2">
             {{ furniture.description }}
           </p>
           <p class="font-[Anta] text-[#635950] text-sm italic">
             Dimensions : {{ furniture.width }}x{{ furniture.height }}x{{ furniture.length }}
           </p>
           <h1 class="font-[Anta] text-[#635950] text-2xl font-bold">{{ furniture.price }} €</h1>
-          <p class="font-[Anta] text-[#635950] text-sm">
+          <p
+            class="cursor-pointer font-[Anta] text-[#635950] text-sm text-decoration-line: underline"
+            @click="getToFurnitureDetails(furniture.id)"
+          >
             Voir plus d'informations sur le produit...
           </p>
         </div>

@@ -9,6 +9,7 @@ import AdminProfile from '@/components/AdminProfile.vue'
 import UserProfile from '@/components/UserProfile.vue'
 import HomePageUser from '@/components/HomePageUser.vue'
 import FurnitureOnSell from '@/components/FurnitureOnSell.vue'
+import DetailsFurniture from '@/components/DetailsFurniture.vue'
 
 const routes = [
   // 🏠 Page d'accueil publique
@@ -16,6 +17,7 @@ const routes = [
     path: '/',
     name: 'Accueil',
     component: HomePage,
+    children: [{ path: 'homepage/furniture/:id', component: DetailsFurniture }],
   },
 
   // 🔐 Auth
@@ -37,6 +39,7 @@ const routes = [
     redirect: '/user/homepage',
     children: [
       { path: 'homepage', component: HomePageUser },
+      { path: 'furniture/:id', component: DetailsFurniture },
       { path: 'furniture/add/sell', component: AddFurniture },
       { path: 'furniture/on/sell', component: FurnitureOnSell },
       { path: 'already-sell-furniture', component: AddFurniture },

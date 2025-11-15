@@ -134,7 +134,7 @@ async function addFurniture(): Promise<void> {
   formData.append('name', furniture.value.name)
   formData.append('description', furniture.value.description)
   formData.append('price', furniture.value.price)
-  formData.append('status', 'en_attente')
+  formData.append('status', 'on_hold')
   formData.append('width', furniture.value.width)
   formData.append('height', furniture.value.height)
   formData.append('length', furniture.value.length)
@@ -170,7 +170,7 @@ async function addFurniture(): Promise<void> {
   }
   setTimeout(() => {
     goToHomePage()
-  }, 3000)
+  }, 2000)
 }
 
 // === Helpers ===
