@@ -2,8 +2,7 @@
 import { ref, onMounted } from 'vue'
 import HeaderCompo from './HeaderCompo.vue'
 import { useAuthStore } from '@/stores/auth'
-import { useRouter } from 'vue-router'
-import FooterCompo from './FooterCompo.vue'
+import { useRouter, useRoute } from 'vue-router'
 import MenuUser from './MenuUser.vue'
 
 const router = useRouter()
@@ -42,6 +41,7 @@ const URL = 'http://localhost:8080'
 const colors = ref<Color[]>([])
 const types = ref<Type[]>([])
 const materials = ref<Material[]>([])
+const furnitureImageUrl = ref<string | null>(null)
 
 const selectedColor = ref<number | null>(null)
 const selectedType = ref<number | null>(null)
@@ -97,11 +97,12 @@ async function getMaterialFurniture(): Promise<void> {
 
 // === Validation du formulaire ===
 function validateForm() {
+  const hasExistingImage = !!furnitureImageUrl.value
   if (
     furniture.value.name === '' ||
     furniture.value.description === '' ||
     furniture.value.price === '' ||
-    !furniture.value.image
+    (!furniture.value.image && !hasExistingImage)
   ) {
     errorMessage.value = '/!\\ Tous les champs obligatoires ne sont pas remplis'
     return false
@@ -109,12 +110,12 @@ function validateForm() {
   return true
 }
 
-function goToHomePage() {
-  router.push('/user/homepage')
+function goToFurnitureOnSell() {
+  router.push('/user/furniture/on/sell')
 }
 
 // === Fonction d’envoi ===
-async function addFurniture(): Promise<void> {
+async function modifyFurniture(): Promise<void> {
   errorMessage.value = ''
   if (!validateForm()) return
 
@@ -149,8 +150,8 @@ async function addFurniture(): Promise<void> {
   console.log('📦 FormData envoyée :', Object.fromEntries(formData.entries()))
 
   try {
-    const response = await fetch(`${URL}/furnitures`, {
-      method: 'POST',
+    const response = await fetch(`${URL}/user/furnitures/modify/${id}`, {
+      method: 'PUT',
       body: formData,
       headers: {
         Authorization: `Bearer ${authStore.token}`,
@@ -160,7 +161,7 @@ async function addFurniture(): Promise<void> {
     const message = await response.text()
 
     if (response.ok) {
-      showPopUp('✅ Meuble ajouté avec succès !')
+      showPopUp('✅ Meuble modifié avec succès !')
       resetForm()
     } else {
       showPopUp('❌ Erreur lors de l’envoi : ' + message)
@@ -171,7 +172,7 @@ async function addFurniture(): Promise<void> {
     showPopUp('❌ Erreur de communication avec le serveur.')
   }
   setTimeout(() => {
-    goToHomePage()
+    goToFurnitureOnSell()
   }, 2000)
 }
 
@@ -198,8 +199,21 @@ function showPopUp(message: string): void {
   setTimeout(() => (showPopup.value = false), 3000)
 }
 
+const route = useRoute()
+const id = route.params.id
+
+async function getInfosFurniture() {
+  const response = await fetch(`${URL}/user/furnitures/${id}`, { method: 'GET' })
+  const data = await response.json()
+  Object.assign(furniture.value, data)
+
+  furniture.value.image = null
+  furnitureImageUrl.value = `${URL}${data.image.image_url}`
+}
+
 // === Initialisation ===
 onMounted(() => {
+  getInfosFurniture()
   getColorFurniture()
   getTypeFurniture()
   getMaterialFurniture()
@@ -209,22 +223,19 @@ onMounted(() => {
 <template>
   <HeaderCompo />
   <MenuUser />
-  <p class="text-center font-[Anta] text-[#635950] bg-[#FFF5E1]">
-    Les champs avec un * sont obligatoires.
-  </p>
   <p class="text-center font-[Anta] text-[#A45338] bg-[#FFF5E1] p-[1%]">{{ errorMessage }}</p>
 
-  <div class="min-h-screen bg-[#FFF5E1] flex justify-center items-start font-[Anta]">
+  <div class="min-h-screen bg-[#FFF5E1] flex justify-center items-start py-5 font-[Anta]">
     <form
-      class="w-full max-w-2xl bg-[#A45338] shadow-lg rounded-2xl p-6 flex flex-col gap-6 mb-5"
-      @submit.prevent="addFurniture"
+      class="w-full max-w-2xl bg-[#A45338] shadow-lg rounded-2xl p-6 flex flex-col gap-6"
+      @submit.prevent="modifyFurniture"
     >
       <h1 class="text-center text-2xl font-[Anta] text-[#FFF5E1]">
         Modifier les informations d'un meuble
       </h1>
       <!-- Nom -->
       <div class="flex flex-col text-center">
-        <label class="text-[#FFF5E1] font-[Anta]" for="name">Nom du meuble *</label>
+        <label class="text-[#FFF5E1] font-[Anta]" for="name">Nom du meuble</label>
         <input
           v-model="furniture.name"
           id="name"
@@ -235,7 +246,7 @@ onMounted(() => {
 
       <!-- Description -->
       <div class="flex flex-col text-center">
-        <label class="text-[#FFF5E1] font-[Anta]" for="description">Description *</label>
+        <label class="text-[#FFF5E1] font-[Anta]" for="description">Description</label>
         <textarea
           rows="10"
           cols="80"
@@ -247,7 +258,7 @@ onMounted(() => {
 
       <!-- Prix -->
       <div class="flex flex-col text-center items-center">
-        <label class="text-[#FFF5E1] font-[Anta]" for="price">Prix *</label>
+        <label class="text-[#FFF5E1] font-[Anta]" for="price">Prix</label>
         <input
           v-model="furniture.price"
           id="price"
@@ -291,7 +302,7 @@ onMounted(() => {
       <!-- Sélecteurs -->
       <div class="flex flex-col gap-4 text-center">
         <div>
-          <label class="text-[#FFF5E1] font-[Anta]">Type de meuble *</label>
+          <label class="text-[#FFF5E1] font-[Anta]">Type de meuble</label>
           <select
             v-model="selectedType"
             class="border border-[#A45338] rounded-lg px-3 py-2 w-full bg-[#FFF5E1] text-[#3B2F2F] font-[Anta] focus:ring-2 focus:ring-[#A45338]"
@@ -302,7 +313,7 @@ onMounted(() => {
         </div>
 
         <div>
-          <label class="text-[#FFF5E1] font-[Anta]">Matériau *</label>
+          <label class="text-[#FFF5E1] font-[Anta]">Matériau</label>
           <select
             v-model="selectedMaterial"
             class="border border-[#A45338] rounded-lg px-3 py-2 w-full bg-[#FFF5E1] text-[#3B2F2F] font-[Anta] focus:ring-2 focus:ring-[#A45338]"
@@ -313,7 +324,7 @@ onMounted(() => {
         </div>
 
         <div>
-          <label class="text-[#FFF5E1] font-[Anta]">Couleur *</label>
+          <label class="text-[#FFF5E1] font-[Anta]">Couleur</label>
           <select
             v-model="selectedColor"
             class="border border-[#A45338] rounded-lg px-3 py-2 w-full bg-[#FFF5E1] text-[#3B2F2F] font-[Anta] focus:ring-2 focus:ring-[#A45338]"
@@ -327,13 +338,21 @@ onMounted(() => {
       </div>
 
       <!-- Upload image -->
-      <div class="flex flex-col text-center">
-        <label class="text-[#FFF5E1] font-[Anta]" for="image">Image du meuble *</label>
+      <div v-if="furnitureImageUrl" class="mb-4">
+        <p class="text-[#FFF5E1] mb-2">Image actuelle :</p>
+        <img
+          :src="furnitureImageUrl"
+          alt="Image actuelle"
+          class="w-40 h-40 object-cover rounded mx-auto"
+        />
+      </div>
+      <div class="flex flex-col">
+        <label class="text-[#FFF5E1] font-[Anta]" for="image">Changer la photo du meuble</label>
         <input
+          class="text-[#FFF5E1] font-[Anta] text-[0.8rem]"
           id="image"
           type="file"
           accept="image/*"
-          class="text-[#FFF5E1]"
           @change="
             (e: Event) => {
               const target = e.target as HTMLInputElement
@@ -351,9 +370,11 @@ onMounted(() => {
           type="submit"
           class="cursor-pointer border border-[#FFF5E1] rounded px-3 py-2 bg-[#FFF5E1] text-[#A45338] font-[Anta]"
         >
-          Soumettre
+          Modifier
         </button>
+
         <button
+          @click="goToFurnitureOnSell"
           type="button"
           class="cursor-pointer border border-[#FFF5E1] rounded px-3 py-2 bg-[#FFF5E1] text-[#A45338] font-[Anta]"
         >
@@ -372,5 +393,4 @@ onMounted(() => {
       </div>
     </transition>
   </div>
-  <FooterCompo />
 </template>

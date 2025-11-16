@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import DeconnexionButton from './DeconnexionButton.vue'
 import HeaderCompo from './HeaderCompo.vue'
+import MenuAdmin from './MenuAdmin.vue'
+import ModificationProfile from './ModificationProfile.vue'
 </script>
 
 <template>
   <HeaderCompo />
-  <DeconnexionButton />
+  <MenuAdmin />
+  <ModificationProfile />
 </template>

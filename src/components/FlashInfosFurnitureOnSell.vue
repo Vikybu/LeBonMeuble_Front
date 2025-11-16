@@ -3,6 +3,7 @@ import { onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import BtnFurnitureToSell from './BtnFurnitureToSell.vue'
 
 const URL = 'http://localhost:8080'
 
@@ -43,27 +44,6 @@ async function getFurniture() {
   } catch (error) {
     console.error('❌ Erreur chargement des meubles en vente :', error)
   }
-}
-
-function translateStatus(status: string) {
-  const map: Record<string, string> = {
-    validated: 'Validé',
-    sold: 'Vendu',
-    on_hold: 'En attente',
-    rejected: 'Refusé',
-  }
-  return map[status] ?? status
-}
-
-function statusClass(status: string) {
-  const map: Record<string, string> = {
-    validated: 'border-green-600 text-green-700 bg-green-100',
-    refused: 'border-red-600 text-red-700 bg-red-100',
-    on_hold: 'border-yellow-600 text-yellow-700 bg-yellow-100',
-    sold: 'border-gray-600 text-gray-700 bg-gray-100',
-  }
-
-  return map[status] ?? 'border-gray-400 text-gray-600 bg-gray-100'
 }
 
 function getToFurnitureDetails(id: number) {
@@ -108,23 +88,8 @@ onMounted(() => {
             Voir plus d'informations sur le produit...
           </p>
         </div>
-        <div class="flex flex-col items-center text-center gap-2 ml-auto">
-          <p
-            class="font-[Anta] px-3 py-1 rounded-full border text-sm"
-            :class="statusClass(furniture.status)"
-          >
-            {{ translateStatus(furniture.status) }}
-          </p>
-          <button
-            class="cursor-pointer border border-[#FFF5E1] rounded px-3 py-2 bg-[#635950] text-[#FFF5e1] font-[Anta]"
-          >
-            Modifier le meuble
-          </button>
-          <button
-            class="cursor-pointer border border-[#FFF5E1] rounded px-3 py-2 bg-[#635950] text-[#FFF5e1] font-[Anta]"
-          >
-            Retirer de la vente
-          </button>
+        <div>
+          <BtnFurnitureToSell :furniture="furniture" />
         </div>
       </div>
     </div>

@@ -4,7 +4,6 @@ import HeaderCompo from './HeaderCompo.vue'
 import { onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import MenuAdmin from './MenuAdmin.vue'
-import DeconnexionButton from './DeconnexionButton.vue'
 
 const URL = 'http://localhost:8080'
 const furnitures = ref<Furniture[]>([])
@@ -53,7 +52,6 @@ onMounted(() => {
 <template>
   <div class="flex flex-row">
     <HeaderCompo />
-    <DeconnexionButton />
   </div>
   <MenuAdmin />
   <FlashInfosStatusFurniture

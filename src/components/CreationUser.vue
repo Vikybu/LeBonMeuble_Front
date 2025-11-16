@@ -23,7 +23,7 @@ async function createUser() {
   if (!ValidateForm()) return
   if (!VerificationPassword()) return
 
-  const response = await fetch(`${URL}/creationUser`, {
+  const response = await fetch(`${URL}/user/create`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(user.value),

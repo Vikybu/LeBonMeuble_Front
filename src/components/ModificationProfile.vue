@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
-const route = useRoute()
 const router = useRouter()
 const passwordVerification = ref('')
 const errorMessage = ref('')
+const authStore = useAuthStore()
+const id = authStore.id
+const showPopup = ref(false)
+const popupMessage = ref('')
 
 const form = ref({
   firstname: '',
@@ -21,49 +25,71 @@ function cancelForm() {
 const URL = 'http://localhost:8080'
 
 function VerificationPassword() {
-  if (form.value.password !== passwordVerification.value) {
-    errorMessage.value = '/!\\ Les mots de passe ne correspondent pas.'
-    return false
-  }
-  return true
-}
-
-async function modifyInfos() {
-  errorMessage.value = ''
-  if (!VerificationPassword()) return
-
-  const formData = new FormData()
-  formData.append('name', form.value.firstname)
-  formData.append('description', form.value.lastname)
-  formData.append('price', form.value.email)
-  formData.append('width', form.value.password)
-
-  const response = await fetch(`${URL}/volunteer/modify`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(formData),
-  })
-
-  const result = await response.json()
-  console.log(result)
-  router.push('/admin/dashboard')
-  if (result.status === 'success') {
-    alert(result.message)
+  if (form.value.password || passwordVerification.value == '') {
+    return true
   } else {
-    alert(result.message)
+    if (form.value.password !== passwordVerification.value) {
+      errorMessage.value = '/!\\ Les mots de passe ne correspondent pas.'
+      return false
+    }
   }
 }
 
-onMounted(async () => {
-  const id = route.params.id
+async function getInfosUser() {
   const response = await fetch(`${URL}/user/infos/${id}`, { method: 'GET' })
   const data = await response.json()
   Object.assign(form.value, data)
+}
+
+async function modifyInfos() {
+  try {
+    errorMessage.value = ''
+    if (!VerificationPassword()) return
+
+    const payload = {
+      firstname: form.value.firstname,
+      lastname: form.value.lastname,
+      email: form.value.email,
+      password: form.value.password || null,
+    }
+
+    const response = await fetch(`${URL}/user/profile/modify/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+
+    const data = await response.json().catch(() => null)
+
+    if (response.ok) {
+      showPopUp('✅ Profil modifié avec succès !')
+      getInfosUser()
+    } else {
+      console.error('Erreur backend :', data)
+      showPopUp('❌ Erreur : ' + (data || 'Erreur inconnue'))
+    }
+  } catch (error) {
+    console.error(error)
+    showPopUp('❌ Erreur de communication avec le serveur.')
+  }
+}
+
+function showPopUp(message: string): void {
+  popupMessage.value = message
+  showPopup.value = true
+  setTimeout(() => (showPopup.value = false), 3000)
+}
+
+onMounted(async () => {
+  getInfosUser()
 })
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#FFF5E1] flex justify-center items-start py-5 font-sans">
+  <div class="min-h-screen bg-[#FFF5E1] flex justify-center items-start py-5 font-[Anta]">
+    <p class="text-center font-[Anta] text-[#635950] bg-[#FFF5E1] p-[1%]">{{ errorMessage }}</p>
     <form
       class="w-full max-w-sm bg-[#A45338] shadow-lg rounded-2xl p-6 flex flex-col gap-6"
       @submit.prevent="modifyInfos()"
@@ -79,7 +105,7 @@ onMounted(async () => {
             type="text"
             placeholder="Prénom"
             class="border border-[#FFF5E1] font-[Anta] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
-            id="passwordVerification"
+            id="firstname"
           />
         </div>
 
@@ -90,7 +116,7 @@ onMounted(async () => {
             type="text"
             placeholder="Nom"
             class="border border-[#FFF5E1] font-[Anta] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
-            id="passwordVerification"
+            id="lastname"
           />
         </div>
 
@@ -101,7 +127,7 @@ onMounted(async () => {
             type="email"
             placeholder="Adresse email"
             class="border border-[#FFF5E1] font-[Anta] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
-            id="passwordVerification"
+            id="email"
           />
         </div>
 
@@ -112,7 +138,7 @@ onMounted(async () => {
             type="password"
             placeholder="Mot de passe"
             class="border border-[#FFF5E1] font-[Anta] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
-            id="passwordVerification"
+            id="password"
           />
         </div>
         <div class="flex flex-col">
@@ -147,5 +173,13 @@ onMounted(async () => {
         </button>
       </div>
     </form>
+    <transition name="fade">
+      <div
+        v-if="showPopup"
+        class="fixed bottom-5 right-5 bg-[#FFF5E1] text-[#A45338] px-6 py-3 rounded-xl shadow-lg font-[Anta]"
+      >
+        {{ popupMessage }}
+      </div>
+    </transition>
   </div>
 </template>
