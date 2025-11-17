@@ -3,9 +3,11 @@ import { onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useCartStore } from '@/stores/useCartStore'
 
 const URL = 'http://localhost:8080'
 const router = useRouter()
+const cart = useCartStore()
 
 const furnitures = ref<Furniture[]>([])
 
@@ -13,7 +15,7 @@ interface Furniture {
   id: number
   name: string
   description: string
-  price: string
+  price: number
   status: string
   width: string
   height: string
@@ -45,6 +47,15 @@ async function getFurniture() {
 
 function getToFurnitureDetails(id: number) {
   router.push(`/user/furniture/${id}`)
+}
+
+function addToCart(furniture: Furniture) {
+  cart.addItem({
+    id: furniture.id,
+    name: furniture.name,
+    price: Number(furniture.price),
+    image_url: furniture.image?.image_url,
+  })
 }
 
 onMounted(() => {
@@ -90,6 +101,7 @@ onMounted(() => {
           <button
             class="cursor-pointer self-start border border-[#635950] rounded px-4 py-2 bg-[#A45338] text-[#FFF5E1] font-[Anta] hover:bg-[#8a3e27] transition"
             type="button"
+            @click.prevent="addToCart(furniture)"
           >
             ACHETER
           </button>

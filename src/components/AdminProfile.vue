@@ -5,7 +5,9 @@ import ModificationProfile from './ModificationProfile.vue'
 </script>
 
 <template>
-  <HeaderCompo />
-  <MenuAdmin />
-  <ModificationProfile />
+  <div class="min-h-screen bg-[#FFF5E1]">
+    <HeaderCompo />
+    <MenuAdmin />
+    <ModificationProfile />
+  </div>
 </template>

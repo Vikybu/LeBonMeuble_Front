@@ -59,5 +59,6 @@ onMounted(() => {
     :key="furniture.id"
     :furniture="furniture"
     @status-updated="getFurniture"
+    class="min-h-screen bg-[#FFF5E1]"
   />
 </template>

@@ -11,6 +11,7 @@ import HomePageUser from '@/components/HomePageUser.vue'
 import FurnitureOnSell from '@/components/FurnitureOnSell.vue'
 import DetailsFurniture from '@/components/DetailsFurniture.vue'
 import ModificationFurniture from '@/components/ModificationFurniture.vue'
+import BaskteCompo from '@/components/BaskteCompo.vue'
 
 const routes = [
   // 🏠 Page d'accueil publique
@@ -47,6 +48,7 @@ const routes = [
       { path: 'profile', component: UserProfile },
       { path: 'furniture/on/sell/modify/:id', component: ModificationFurniture },
       { path: 'furniture/:id/modify', component: ModificationFurniture },
+      { path: 'basket', component: BaskteCompo },
     ],
   },
 
