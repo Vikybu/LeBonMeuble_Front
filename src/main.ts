@@ -4,9 +4,11 @@ import App from './App.vue'
 import router from './router/router'
 import './assets/main.css'
 import { useAuthStore } from '@/stores/auth'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 const app = createApp(App)
 const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate)
 
 app.use(pinia)
 

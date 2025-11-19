@@ -11,11 +11,8 @@ function goToBasket() {
 </script>
 
 <template>
-  <div>
-    <button
-      class="cursor-pointer bg-[#635950] cursor-pointer rounded px-2 py-2"
-      @click="goToBasket"
-    >
+  <div class="flex flex-row gap-5">
+    <button class="cursor-pointer" @click="goToBasket">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -26,7 +23,7 @@ function goToBasket() {
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"
-        class="lucide-shopping-cart-icon lucide-shopping-cart text-[#FFF5E1]"
+        class="lucide-shopping-cart-icon lucide-shopping-cart text-[#A45338]"
       >
         <circle cx="8" cy="21" r="1" />
         <circle cx="19" cy="21" r="1" />
@@ -35,6 +32,6 @@ function goToBasket() {
         />
       </svg>
     </button>
-    <span class="font-[Anta] text-[#FFF5E1]">{{ cart.count }}</span>
+    <span class="font-[Anta] text-[#A45338]">{{ cart.count }}</span>
   </div>
 </template>

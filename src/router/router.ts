@@ -12,6 +12,8 @@ import FurnitureOnSell from '@/components/FurnitureOnSell.vue'
 import DetailsFurniture from '@/components/DetailsFurniture.vue'
 import ModificationFurniture from '@/components/ModificationFurniture.vue'
 import UserBuyingPage from '@/components/UserBuyingPage.vue'
+import PaymentSucess from '@/components/PaymentSucess.vue'
+import PaymentCancel from '@/components/PaymentCancel.vue'
 
 const routes = [
   // 🏠 Page d'accueil publique
@@ -61,6 +63,17 @@ const routes = [
       { path: 'homepage', component: HomePageAdmin },
       { path: 'profile', component: AdminProfile },
     ],
+  },
+
+  {
+    path: '/payment-success',
+    name: 'PaymentSuccess',
+    component: PaymentSucess,
+  },
+  {
+    path: '/payment-cancel',
+    name: 'PaymentCancel',
+    component: PaymentCancel,
   },
 ]
 

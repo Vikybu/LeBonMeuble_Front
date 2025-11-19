@@ -10,6 +10,7 @@ export const useCartStore = defineStore('shopping-cart', {
       image_url: string
     }>,
   }),
+  persist: true,
 
   getters: {
     count: (state) => state.items.reduce((total, item) => total + item.qty, 0),

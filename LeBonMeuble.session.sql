@@ -148,4 +148,20 @@ UPDATE furniture
 SET status = 'on_hold'
 WHERE id=6;
 
+-- @block
+SELECT
+    CONSTRAINT_NAME,
+    TABLE_NAME,
+    COLUMN_NAME,
+    REFERENCED_TABLE_NAME,
+    REFERENCED_COLUMN_NAME
+FROM
+    information_schema.KEY_COLUMN_USAGE
+WHERE
+    TABLE_SCHEMA = DATABASE()   -- ta base actuelle
+    AND TABLE_NAME = 'orders'
+    AND REFERENCED_TABLE_NAME IS NOT NULL;
 
+-- @block 
+ALTER TABLE orders
+DROP FOREIGN KEY `orders_ibfk_1`;
