@@ -198,6 +198,10 @@ function showPopUp(message: string): void {
   setTimeout(() => (showPopup.value = false), 3000)
 }
 
+function goToHomepage() {
+  router.push('/user/homepage')
+}
+
 // === Initialisation ===
 onMounted(() => {
   getColorFurniture()
@@ -219,9 +223,7 @@ onMounted(() => {
       class="w-full max-w-2xl bg-[#A45338] shadow-lg rounded-2xl p-6 flex flex-col gap-6 mb-5"
       @submit.prevent="addFurniture"
     >
-      <h1 class="text-center text-2xl font-[Anta] text-[#FFF5E1]">
-        Modifier les informations d'un meuble
-      </h1>
+      <h1 class="text-center text-2xl font-[Anta] text-[#FFF5E1]">Ajouter un meuble à vendre</h1>
       <!-- Nom -->
       <div class="flex flex-col text-center">
         <label class="text-[#FFF5E1] font-[Anta]" for="name">Nom du meuble *</label>
@@ -356,6 +358,7 @@ onMounted(() => {
         <button
           type="button"
           class="cursor-pointer border border-[#FFF5E1] rounded px-3 py-2 bg-[#FFF5E1] text-[#A45338] font-[Anta]"
+          @click="goToHomepage"
         >
           Retour à l'accueil
         </button>

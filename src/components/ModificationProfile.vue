@@ -18,8 +18,8 @@ const form = ref({
   password: '',
 })
 
-function cancelForm() {
-  router.push('/admin/dashboard')
+function goToHomepage() {
+  router.push('/user/homepage')
 }
 
 const URL = 'http://localhost:8080'
@@ -88,7 +88,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="w-full flex justify-center items-start py-5 font-[Anta]">
+  <div class="w-full bg-[#FFF5E1] flex justify-center items-start py-5 font-[Anta]">
     <p class="text-center font-[Anta] text-[#635950] bg-[#FFF5E1] p-[1%]">{{ errorMessage }}</p>
     <form
       class="w-full max-w-sm bg-[#A45338] shadow-lg rounded-2xl p-6 flex flex-col gap-6"
@@ -166,7 +166,7 @@ onMounted(async () => {
 
         <button
           type="button"
-          @click="cancelForm"
+          @click="goToHomepage"
           class="cursor-pointer w-full bg-[#FFF5E1] hover:bg-[#FFF5E1] text-[#635950] font-[Anta] py-2 rounded-lg shadow-md transition-colors duration-200"
         >
           Annuler

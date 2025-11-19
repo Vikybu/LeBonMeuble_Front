@@ -4,9 +4,7 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { computed } from 'vue'
 import BtnBasket from './BtnBasket.vue'
-import { useCartStore } from '@/stores/useCartStore'
 
-const cart = useCartStore()
 const auth = useAuthStore()
 const router = useRouter()
 
@@ -39,7 +37,6 @@ function goToConnexion() {
     <div v-if="isLoggedIn" class="flex items-center px-4 gap-6">
       <h1 class="font-[Anta] text-[2rem] text-[#FFF5E1] truncate">Bonjour {{ firstname }}</h1>
       <BtnBasket class="border border-[#FFF5E1] bg-[#FFF5E1] rounded px-3 py-2 mr-3 ml-3" />
-      <span>{{ cart.count }}</span>
       <button
         @click="logout"
         class="ml-auto cursor-pointer border border-[#635950] rounded px-3 py-2 bg-[#635950] text-[#FFF5E1] font-[Anta]"

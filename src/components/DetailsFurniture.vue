@@ -3,6 +3,8 @@ import { useAuthStore } from '@/stores/auth'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import HeaderCompo from './HeaderCompo.vue'
+import BtnBuyFurniture from './BtnBuyFurniture.vue'
+import BtnBackHomepage from './BtnBackHomepage.vue'
 
 const route = useRoute()
 //const router = useRouter()
@@ -51,10 +53,6 @@ async function openDetailsFurnitureById() {
   }
 }
 
-//function getBackToHome() {
-//  router.push('/user/homepage')
-//}
-
 onMounted(() => {
   openDetailsFurnitureById()
 })
@@ -92,20 +90,8 @@ onMounted(() => {
           </p>
           <h1 class="font-[Anta] text-[#635950] text-2xl font-bold">{{ furniture.price }} €</h1>
 
-          <div class="flex flex-row gap-3">
-            <button
-              class="cursor-pointer self-start border border-[#635950] rounded px-4 py-2 bg-[#A45338] text-[#FFF5E1] font-[Anta] hover:bg-[#8a3e27] transition"
-              type="button"
-            >
-              ACHETER
-            </button>
-            <button
-              class="cursor-pointer self-start border border-[#635950] rounded px-4 py-2 bg-[#A45338] text-[#FFF5E1] font-[Anta] hover:bg-[#8a3e27] transition"
-              type="button"
-            >
-              REVENIR A L'ACCUEIL
-            </button>
-          </div>
+          <BtnBuyFurniture :furniture="furniture" />
+          <BtnBackHomepage />
         </div>
       </div>
     </div>

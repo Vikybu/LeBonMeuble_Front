@@ -17,6 +17,14 @@
     </RouterLink>
 
     <RouterLink
+      to="/user/basket"
+      class="px-4 py-2 rounded-lg text-[#FFF5E1] font-[Anta] whitespace-nowrap text-center hover:text-[#A45338] hover:bg-[#FFF5E1] transition-colors duration-200 mx-1"
+      :class="{ 'text-[#FFF5E1] bg-[#A45338]': $route.path === 'basket' }"
+    >
+      Mon panier
+    </RouterLink>
+
+    <RouterLink
       to="/user/profile"
       class="px-4 py-2 rounded-lg text-[#FFF5E1] font-[Anta] whitespace-nowrap text-center hover:text-[#A45338] hover:bg-[#FFF5E1] transition-colors duration-200 mx-1"
       :class="{ 'text-[#FFF5E1] bg-[#A45338]': $route.path === 'profile' }"

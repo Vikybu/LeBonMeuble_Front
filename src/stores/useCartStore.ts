@@ -7,7 +7,7 @@ export const useCartStore = defineStore('shopping-cart', {
       name: string
       price: number
       qty: number
-      image?: string
+      image_url: string
     }>,
   }),
 
@@ -18,7 +18,7 @@ export const useCartStore = defineStore('shopping-cart', {
   },
 
   actions: {
-    addItem(newItem: { id: number; name: string; price: number; image?: string }) {
+    addItem(newItem: { id: number; name: string; price: number; image_url: string }) {
       const existing = this.items.find((item) => item.id === newItem.id)
 
       if (existing) {
