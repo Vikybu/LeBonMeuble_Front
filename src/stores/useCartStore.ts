@@ -9,6 +9,7 @@ export const useCartStore = defineStore('shopping-cart', {
       qty: number
       image_url: string
     }>,
+    userId: null as number | null,
   }),
   persist: true,
 
@@ -19,6 +20,23 @@ export const useCartStore = defineStore('shopping-cart', {
   },
 
   actions: {
+    setUser(userId: number) {
+      this.userId = userId
+      this.loadCart()
+    },
+
+    loadCart() {
+      if (!this.userId) return
+
+      const data = localStorage.getItem(`cart_${this.userId}`)
+      this.items = data ? JSON.parse(data) : []
+    },
+
+    saveCart() {
+      if (!this.userId) return
+      localStorage.setItem(`cart_${this.userId}`, JSON.stringify(this.items))
+    },
+
     addItem(newItem: { id: number; name: string; price: number; image_url: string }) {
       const existing = this.items.find((item) => item.id === newItem.id)
 
@@ -42,6 +60,11 @@ export const useCartStore = defineStore('shopping-cart', {
     },
 
     clear() {
+      this.items = []
+    },
+
+    logout() {
+      this.userId = null
       this.items = []
     },
   },

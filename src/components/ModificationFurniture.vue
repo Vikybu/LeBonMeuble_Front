@@ -68,7 +68,8 @@ async function getColorFurniture(): Promise<void> {
   try {
     const response = await fetch(`${URL}/color`)
     if (!response.ok) throw new Error('Erreur lors du chargement des couleurs')
-    colors.value = await response.json()
+    const data = await response.json()
+    colors.value = data.sort((a: Color, b: Color) => a.name.localeCompare(b.name, 'fr'))
   } catch (error) {
     console.error(error)
   }
@@ -78,7 +79,8 @@ async function getTypeFurniture(): Promise<void> {
   try {
     const response = await fetch(`${URL}/type`)
     if (!response.ok) throw new Error('Erreur lors du chargement des types')
-    types.value = await response.json()
+    const data = await response.json()
+    types.value = data.sort((a: Type, b: Type) => a.name.localeCompare(b.name, 'fr'))
     console.log('📦 Types reçus :', types)
   } catch (error) {
     console.error(error)
@@ -89,7 +91,8 @@ async function getMaterialFurniture(): Promise<void> {
   try {
     const response = await fetch(`${URL}/material`)
     if (!response.ok) throw new Error('Erreur lors du chargement des matériaux')
-    materials.value = await response.json()
+    const data = await response.json()
+    materials.value = data.sort((a: Material, b: Material) => a.name.localeCompare(b.name, 'fr'))
   } catch (error) {
     console.error(error)
   }
@@ -134,13 +137,13 @@ async function modifyFurniture(): Promise<void> {
   }
 
   const formData = new FormData()
-  formData.append('name', furniture.value.name)
-  formData.append('description', furniture.value.description)
-  formData.append('price', furniture.value.price)
+  formData.append('name', furniture.value.name.trim())
+  formData.append('description', furniture.value.description.trim())
+  formData.append('price', furniture.value.price.trim())
   formData.append('status', 'on_hold')
-  formData.append('width', furniture.value.width)
-  formData.append('height', furniture.value.height)
-  formData.append('length', furniture.value.length)
+  formData.append('width', furniture.value.width.trim())
+  formData.append('height', furniture.value.height.trim())
+  formData.append('length', furniture.value.length.trim())
   formData.append('user_id', userId.toString())
   formData.append('type_id', selectedType.value.toString())
   formData.append('material_id', selectedMaterial.value.toString())

@@ -4,6 +4,7 @@ import HeaderCompo from './HeaderCompo.vue'
 import { onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import MenuAdmin from './MenuAdmin.vue'
+import FooterCompo from './FooterCompo.vue'
 
 const URL = 'http://localhost:8080'
 const furnitures = ref<Furniture[]>([])
@@ -59,6 +60,6 @@ onMounted(() => {
     :key="furniture.id"
     :furniture="furniture"
     @status-updated="getFurniture"
-    class="min-h-screen bg-[#FFF5E1]"
   />
+  <FooterCompo />
 </template>

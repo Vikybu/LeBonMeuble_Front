@@ -25,7 +25,7 @@ function askDelete() {
 function translateStatus(status: string) {
   const map: Record<string, string> = {
     validated: 'Validé',
-    sold: 'Vendu',
+    SOLD: 'Vendu',
     on_hold: 'En attente',
     rejected: 'Refusé',
   }
@@ -37,7 +37,7 @@ function statusClass(status: string) {
     validated: 'border-green-600 text-green-700 bg-green-100',
     refused: 'border-red-600 text-red-700 bg-red-100',
     on_hold: 'border-yellow-600 text-yellow-700 bg-yellow-100',
-    sold: 'border-gray-600 text-gray-700 bg-gray-100',
+    sold: 'border-blue-600 text-blue-700 bg-blue-100',
   }
 
   return map[status] ?? 'border-gray-400 text-gray-600 bg-gray-100'
@@ -51,6 +51,10 @@ function showPopUp(message: string): void {
 
 function goToModificationFurniture() {
   router.push(`/user/furniture/on/sell/modify/${props.furniture.id}`)
+}
+
+function isDisabled() {
+  return props.furniture.status === 'SOLD'
 }
 
 async function confirmDelete() {
@@ -82,6 +86,14 @@ async function confirmDelete() {
 }
 function cancelDelete() {
   showConfirm.value = false
+}
+
+function BtnDelete() {
+  if (isDisabled()) {
+    showPopUp('❌ Vous ne pouvez pas supprimer un meuble déjà vendu.')
+    return
+  }
+  confirmDelete()
 }
 </script>
 
@@ -116,7 +128,11 @@ function cancelDelete() {
         <p class="text-[#A45338] text-lg mb-4">Voulez-vous vraiment supprimer ce meuble ?</p>
 
         <div class="flex justify-center gap-4">
-          <button @click="confirmDelete" class="px-4 py-2 bg-red-600 text-white rounded-lg">
+          <button
+            @click="BtnDelete"
+            :disabled="isDisabled()"
+            class="px-4 py-2 bg-red-600 text-white rounded-lg disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
             Oui
           </button>
 

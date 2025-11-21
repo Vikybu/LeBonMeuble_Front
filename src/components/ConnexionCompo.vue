@@ -4,6 +4,7 @@ import FooterCompo from './FooterCompo.vue'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
+import { useCartStore } from '@/stores/useCartStore'
 
 interface User {
   email: string
@@ -46,6 +47,9 @@ async function connexion() {
 
     if (role == 'USER') {
       router.push('/user/homePage')
+      const cart = useCartStore()
+      const userId = auth.id
+      cart.setUser(userId!)
     } else if (role == 'ADMIN') {
       router.push('/admin/homePage')
     } else {
@@ -55,6 +59,10 @@ async function connexion() {
     console.error('Erreur lors de la connexion :', error)
     alert('Une erreur est survenue lors de la connexion')
   }
+}
+
+function goToHomepage() {
+  router.push('/')
 }
 </script>
 
@@ -102,6 +110,7 @@ async function connexion() {
           <button
             class="cursor-pointer border border-[#FFF5E1] rounded px-3 py-2 bg-[#FFF5E1] text-[#A45338] font-[Anta]"
             type="button"
+            @click="goToHomepage"
           >
             Annuler
           </button>

@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/auth'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import BtnFurnitureToSell from './BtnFurnitureToSell.vue'
+import FilterCompo from './FilterCompo.vue'
 
 const URL = 'http://localhost:8080'
 
@@ -11,6 +12,29 @@ const furnitures = ref<Furniture[]>([])
 const authStore = useAuthStore()
 const id = authStore.id
 const router = useRouter()
+
+interface Color {
+  id: number
+  name: string
+}
+
+interface Type {
+  id: number
+  name: string
+}
+
+interface Material {
+  id: number
+  name: string
+}
+
+const colors = ref<Color[]>([])
+const types = ref<Type[]>([])
+const materials = ref<Material[]>([])
+
+const selectedColor = ref<number | null>(null)
+const selectedType = ref<number | null>(null)
+const selectedMaterial = ref<number | null>(null)
 
 interface Furniture {
   id: number
@@ -56,6 +80,12 @@ onMounted(() => {
 </script>
 
 <template>
+  <div class="flex flex-row bg-[#FFF5E1] gap-5 justify-center items-center">
+    <p class="font-[Anta] text-[#A45338]">Filtrer par :</p>
+    <FilterCompo elementAFiltrer="Matériaux" v-model="selectedMaterial" :elements="materials" />
+    <FilterCompo elementAFiltrer="Couleurs" v-model="selectedColor" :elements="colors" />
+    <FilterCompo elementAFiltrer="Types de meuble" v-model="selectedType" :elements="types" />
+  </div>
   <div class="bg-[#FFF5E1] p-5">
     <div class="flex flex-col gap-5">
       <div

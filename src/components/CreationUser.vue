@@ -2,11 +2,13 @@
 import FooterCompo from './FooterCompo.vue'
 import HeaderCompo from './HeaderCompo.vue'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const passwordVerification = ref('')
 const showPopup = ref(false)
 const popupMessage = ref('')
 const errorMessage = ref('')
+const router = useRouter()
 
 const user = ref({
   firstname: '',
@@ -68,6 +70,10 @@ function showPopUp(message: string) {
   setTimeout(() => {
     showPopup.value = false
   }, 3000)
+}
+
+function goToHomepage() {
+  router.push('/')
 }
 </script>
 
@@ -133,6 +139,7 @@ function showPopUp(message: string) {
           </button>
           <button
             class="cursor-pointer border border-[#FFF5E1] rounded px-3 py-2 bg-[#FFF5E1] text-[#A45338] font-[Anta]"
+            @click="goToHomepage"
           >
             Annuler
           </button>

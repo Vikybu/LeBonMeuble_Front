@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { useCartStore } from '@/stores/useCartStore'
 import { ref } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
 
 const cart = useCartStore()
 const showPopup = ref(false)
 const popupMessage = ref('')
+const auth = useAuthStore()
+const router = useRouter()
 
 const props = defineProps<{
   furniture: {
@@ -16,13 +20,17 @@ const props = defineProps<{
 }>()
 
 function addToCart() {
-  cart.addItem({
-    id: props.furniture.id,
-    name: props.furniture.name,
-    price: props.furniture.price,
-    image_url: props.furniture.image?.image_url,
-  })
-  showPopUp('Article ajouté au panier !')
+  if (auth.userInfo?.id == null) {
+    router.push('/connexion')
+  } else {
+    cart.addItem({
+      id: props.furniture.id,
+      name: props.furniture.name,
+      price: props.furniture.price,
+      image_url: props.furniture.image?.image_url,
+    })
+    showPopUp('Article ajouté au panier !')
+  }
 }
 
 function showPopUp(message: string): void {

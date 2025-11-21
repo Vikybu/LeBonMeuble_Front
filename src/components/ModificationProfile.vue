@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import FooterCompo from './FooterCompo.vue'
 
 const router = useRouter()
 const passwordVerification = ref('')
@@ -47,10 +48,10 @@ async function modifyInfos() {
     if (!VerificationPassword()) return
 
     const payload = {
-      firstname: form.value.firstname,
-      lastname: form.value.lastname,
-      email: form.value.email,
-      password: form.value.password || null,
+      firstname: form.value.firstname.trim(),
+      lastname: form.value.lastname.trim(),
+      email: form.value.email.trim(),
+      password: form.value.password.trim() || null,
     }
 
     const response = await fetch(`${URL}/user/profile/modify/${id}`, {
@@ -182,4 +183,5 @@ onMounted(async () => {
       </div>
     </transition>
   </div>
+  <FooterCompo />
 </template>

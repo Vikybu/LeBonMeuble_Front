@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
+import { useCartStore } from '@/stores/useCartStore'
 
+const cart = useCartStore()
 const router = useRouter()
 const authStore = useAuthStore()
 
 function logout() {
   if (confirm('Êtes-vous sûr(e) de vouloir vous déconnecter ?')) {
     authStore.logout()
+    cart.logout()
     router.push('/connexion')
   }
 }

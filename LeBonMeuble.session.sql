@@ -165,3 +165,36 @@ WHERE
 -- @block 
 ALTER TABLE orders
 DROP FOREIGN KEY `orders_ibfk_1`;
+
+-- @block
+CREATE TABLE order_item (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    price INT NOT NULL,
+    quantity INT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    furniture_id INT NOT NULL, 
+    FOREIGN KEY (furniture_id) REFERENCES furniture(id),
+    orders_id INT NOT NULL, 
+    FOREIGN KEY (orders_id) REFERENCES orders(id)
+);
+
+-- @block
+RENAME TABLE order_item TO order_items;
+
+-- @block 
+ALTER TABLE order_items MODIFY name VARCHAR(255) NULL;
+
+-- @block
+INSERT INTO type (name, created_at, updated_at)
+VALUES 
+('Banc', '2025-11-12', '2025-11-20'),
+('Chaise haute pour bébé', '2025-11-12', '2025-11-20'),
+('Marche-pied', '2025-11-12', '2025-11-20'),
+('Chaise de bar', '2025-11-12', '2025-11-20'),
+('Rangement', '2025-11-12', '2025-11-20'),
+('Meuble à chaussures', '2025-11-12', '2025-11-20'),
+('Matelas', '2025-11-12', '2025-11-20'),
+('Mobilier de jardin', '2025-11-12', '2025-11-20'),
+('Chaise de bureau', '2025-11-12', '2025-11-20')
