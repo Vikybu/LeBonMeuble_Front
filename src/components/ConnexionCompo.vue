@@ -26,7 +26,7 @@ function goToCreateUser() {
 
 async function connexion() {
   try {
-    const response = await fetch(`${URL}/login`, {
+    const response = await fetch(`${URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(user.value),
@@ -45,12 +45,12 @@ async function connexion() {
     auth.login(token)
     const role = auth.role
 
-    if (role == 'USER') {
+    if (role == 'user') {
       router.push('/user/homePage')
       const cart = useCartStore()
       const userId = auth.id
       cart.setUser(userId!)
-    } else if (role == 'ADMIN') {
+    } else if (role == 'admin') {
       router.push('/admin/homePage')
     } else {
       console.warn('Rôle inconnu ou manquant dans le token :', role)

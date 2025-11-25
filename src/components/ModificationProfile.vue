@@ -37,9 +37,23 @@ function VerificationPassword() {
 }
 
 async function getInfosUser() {
-  const response = await fetch(`${URL}/user/infos/${id}`, { method: 'GET' })
+  const response = await fetch(`${URL}/user/infos/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authStore.token}`,
+    },
+  })
+
   const data = await response.json()
-  Object.assign(form.value, data)
+
+  form.value.firstname = data.firstname ?? ''
+  form.value.lastname = data.lastname ?? ''
+  form.value.email = data.email ?? ''
+  form.value.password = ''
+
+  console.log('DATA REÇU :', data)
+  console.log('FORM FINALE :', form.value)
 }
 
 async function modifyInfos() {
@@ -58,6 +72,7 @@ async function modifyInfos() {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${authStore.token}`,
       },
       body: JSON.stringify(payload),
     })

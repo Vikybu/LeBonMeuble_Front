@@ -206,7 +206,15 @@ const route = useRoute()
 const id = route.params.id
 
 async function getInfosFurniture() {
-  const response = await fetch(`${URL}/user/furnitures/${id}`, { method: 'GET' })
+  const authStore = useAuthStore()
+  console.log('Token envoyé :', authStore.token)
+  const response = await fetch(`${URL}/user/furnitures/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authStore.token}`,
+    },
+  })
   const data = await response.json()
   Object.assign(furniture.value, data)
 

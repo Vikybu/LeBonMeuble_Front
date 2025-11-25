@@ -78,73 +78,94 @@ function goToHomepage() {
 </script>
 
 <template>
-  <HeaderCompo />
-  <div class="min-h-screen bg-[#635950]">
-    <p class="text-center font-[Anta] text-[#FFF5E1] bg-[#635950] p-[1%]">{{ errorMessage }}</p>
-    <div>
-      <form class="flex flex-col justify-center items-center gap-6" @submit.prevent="createUser">
+  <div class="min-h-screen flex flex-col bg-[#FFF5E1] font-[Anta]">
+    <HeaderCompo />
+
+    <div class="flex-1 flex flex-col items-center justify-center px-4 py-6">
+      <p v-if="errorMessage" class="text-center text-[#635950] mb-4">
+        {{ errorMessage }}
+      </p>
+
+      <form
+        class="w-full max-w-lg bg-[#635950] shadow-lg rounded-2xl p-6 flex flex-col gap-6"
+        @submit.prevent="createUser"
+      >
+        <h1 class="text-center text-2xl text-[#FFF5E1]">Créer son profil Le Bon Meuble</h1>
+
+        <p class="text-center text-[1rem] text-[#FFF5E1]">
+          Les éléments avec un * sont obligatoires
+        </p>
+
         <div class="flex flex-col text-center">
-          <label class="text-[#FFF5E1] font-[Anta]" for="firstname">Prénom *</label>
+          <label class="text-[#FFF5E1]" for="firstname">Prénom *</label>
           <input
             v-model="user.firstname"
-            class="border border-[#FFF5E1] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
             id="firstname"
             type="text"
+            class="border border-[#FFF5E1] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] text-[#FFF5E1]"
           />
         </div>
+
         <div class="flex flex-col text-center">
-          <label class="text-[#FFF5E1] font-[Anta]" for="lastname">Nom *</label>
+          <label class="text-[#FFF5E1]" for="lastname">Nom *</label>
           <input
             v-model="user.lastname"
-            class="border border-[#FFF5E1] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
             id="lastname"
             type="text"
+            class="border border-[#FFF5E1] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] text-[#FFF5E1]"
           />
         </div>
+
         <div class="flex flex-col text-center">
-          <label class="text-[#FFF5E1] font-[Anta]" for="email">Email *</label>
+          <label class="text-[#FFF5E1]" for="email">Email *</label>
           <input
             v-model="user.email"
-            class="border border-[#FFF5E1] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
             id="email"
             type="email"
+            class="border border-[#FFF5E1] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] text-[#FFF5E1]"
           />
         </div>
+
         <div class="flex flex-col text-center">
-          <label class="text-[#FFF5E1] font-[Anta]" for="password">Mot de passe *</label>
+          <label class="text-[#FFF5E1]" for="password">Mot de passe *</label>
           <input
             v-model="user.password"
-            class="border border-[#FFF5E1] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
             id="password"
             type="password"
+            class="border border-[#FFF5E1] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] text-[#FFF5E1]"
           />
         </div>
+
         <div class="flex flex-col text-center">
-          <label class="text-[#FFF5E1] font-[Anta]" for="passwordVerification"
-            >Vérification du mot de passe *</label
-          >
+          <label class="text-[#FFF5E1]" for="passwordVerification">
+            Vérification du mot de passe *
+          </label>
           <input
             v-model="passwordVerification"
-            class="border border-[#FFF5E1] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] focus:border-transparent text-[#FFF5E1]"
             id="passwordVerification"
             type="password"
+            class="border border-[#FFF5E1] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFF5E1] text-[#FFF5E1]"
           />
         </div>
-        <div class="flex flex-row gap-10">
+
+        <div class="flex flex-row gap-10 justify-center mt-2">
           <button
             type="submit"
-            class="cursor-pointer border border-[#FFF5E1] rounded px-3 py-2 bg-[#FFF5E1] text-[#A45338] font-[Anta]"
+            class="cursor-pointer border border-[#FFF5E1] rounded px-4 py-2 bg-[#FFF5E1] text-[#A45338]"
           >
             Créer son profil
           </button>
+
           <button
-            class="cursor-pointer border border-[#FFF5E1] rounded px-3 py-2 bg-[#FFF5E1] text-[#A45338] font-[Anta]"
+            type="button"
             @click="goToHomepage"
+            class="cursor-pointer border border-[#FFF5E1] rounded px-4 py-2 bg-[#FFF5E1] text-[#A45338]"
           >
             Annuler
           </button>
         </div>
       </form>
+
       <transition name="fade">
         <div
           v-if="showPopup"
@@ -154,9 +175,22 @@ function goToHomepage() {
         </div>
       </transition>
     </div>
+
+    <FooterCompo />
   </div>
-  <FooterCompo />
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
 
 <style scoped>
 .fade-enter-active,

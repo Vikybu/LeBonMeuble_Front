@@ -1,37 +1,13 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { useAuthStore } from '@/stores/auth'
-import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import BtnBuyFurniture from './BtnBuyFurniture.vue'
-import FilterCompo from './FilterCompo.vue'
 
 const URL = 'http://localhost:8080'
 const router = useRouter()
 
-interface Color {
-  id: number
-  name: string
+function getToFurnitureDetails(id: number) {
+  router.push(`/user/furniture/${id}`)
 }
-
-interface Type {
-  id: number
-  name: string
-}
-
-interface Material {
-  id: number
-  name: string
-}
-
-const furnitures = ref<Furniture[]>([])
-const colors = ref<Color[]>([])
-const types = ref<Type[]>([])
-const materials = ref<Material[]>([])
-
-const selectedColor = ref<number | null>(null)
-const selectedType = ref<number | null>(null)
-const selectedMaterial = ref<number | null>(null)
 
 interface Furniture {
   id: number
@@ -52,79 +28,17 @@ interface Furniture {
   }
 }
 
-async function getFurniture() {
-  try {
-    const response = await fetch(`${URL}/user/furnitures`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${useAuthStore().token}`,
-      },
-    })
-    furnitures.value = await response.json()
-    console.log('✅ Données reçues du backend :', furnitures.value)
-  } catch (error) {
-    console.error('❌ Erreur chargement des meubles en vente :', error)
-  }
-}
-
-function getToFurnitureDetails(id: number) {
-  router.push(`/user/furniture/${id}`)
-}
-
-async function getColorFurniture(): Promise<void> {
-  try {
-    const response = await fetch(`${URL}/color`)
-    if (!response.ok) throw new Error('Erreur lors du chargement des couleurs')
-    const data = await response.json()
-    colors.value = data.sort((a: Color, b: Color) => a.name.localeCompare(b.name, 'fr'))
-  } catch (error) {
-    console.error(error)
-  }
-}
-
-async function getTypeFurniture(): Promise<void> {
-  try {
-    const response = await fetch(`${URL}/type`)
-    if (!response.ok) throw new Error('Erreur lors du chargement des types')
-    const data = await response.json()
-    types.value = data.sort((a: Type, b: Type) => a.name.localeCompare(b.name, 'fr'))
-    console.log('📦 Types reçus :', types)
-  } catch (error) {
-    console.error(error)
-  }
-}
-
-async function getMaterialFurniture(): Promise<void> {
-  try {
-    const response = await fetch(`${URL}/material`)
-    if (!response.ok) throw new Error('Erreur lors du chargement des matériaux')
-    const data = await response.json()
-    materials.value = data.sort((a: Material, b: Material) => a.name.localeCompare(b.name, 'fr'))
-  } catch (error) {
-    console.error(error)
-  }
-}
-
-onMounted(() => {
-  getFurniture()
-  getColorFurniture()
-  getTypeFurniture()
-  getMaterialFurniture()
-})
+const props = defineProps<{
+  furnitures: Furniture[]
+}>()
 </script>
 
 <template>
-  <div class="flex flex-row bg-[#FFF5E1] gap-5 justify-center items-center">
-    <p class="font-[Anta] text-[#A45338]">Filtrer par :</p>
-    <FilterCompo elementAFiltrer="Matériaux" v-model="selectedMaterial" :elements="materials" />
-    <FilterCompo elementAFiltrer="Couleurs" v-model="selectedColor" :elements="colors" />
-    <FilterCompo elementAFiltrer="Types de meuble" v-model="selectedType" :elements="types" />
-  </div>
   <div class="bg-[#FFF5E1] p-4">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       <div
         class="border border-[#A45338] rounded-xl p-4 flex items-center gap-6 shadow-md bg-[#FFF5E1]"
-        v-for="furniture in furnitures"
+        v-for="furniture in props.furnitures"
         :key="furniture.id"
       >
         <img

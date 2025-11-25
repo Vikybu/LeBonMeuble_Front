@@ -198,3 +198,20 @@ VALUES
 ('Matelas', '2025-11-12', '2025-11-20'),
 ('Mobilier de jardin', '2025-11-12', '2025-11-20'),
 ('Chaise de bureau', '2025-11-12', '2025-11-20')
+
+-- @block
+INSERT INTO material (name, created_at, updated_at)
+VALUES 
+('Merisier', '2025-11-24', '2025-11-24'),
+('Tissu', '2025-11-24', '2025-11-24'),
+('Cuir', '2025-11-24', '2025-11-24'),
+('Velour', '2025-11-24', '2025-11-24'),
+('Métal', '2025-11-24', '2025-11-24'),
+('Rotin', '2025-11-24', '2025-11-24'),
+('Bambou', '2025-11-24', '2025-11-24'),
+('Verre', '2025-11-24', '2025-11-24')
+
+-- @block
+UPDATE user
+SET role = 'admin'
+WHERE id=12;

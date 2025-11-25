@@ -1,11 +1,149 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
+import { onMounted, ref, watch, computed } from 'vue'
+
 import HeaderCompo from './HeaderCompo.vue'
 import MenuCompo from './MenuUser.vue'
-import FlashInfosFurniture from './FlashInfosFurniture.vue'
-import { useRouter } from 'vue-router'
 import FooterCompo from './FooterCompo.vue'
+import FlashInfosFurniture from './FlashInfosFurniture.vue'
+import FilterTypeColorMaterialCompo from './FilterTypeColorMaterialCompo.vue'
+import { useAuthStore } from '@/stores/auth'
 
+const API_URL = 'http://localhost:8080'
 const router = useRouter()
+const authStore = useAuthStore()
+
+interface Color {
+  id: number
+  name: string
+}
+
+interface Type {
+  id: number
+  name: string
+}
+
+interface Material {
+  id: number
+  name: string
+}
+
+interface Furniture {
+  id: number
+  name: string
+  description: string
+  price: number
+  status: string
+  width: string
+  height: string
+  length: string
+  type: string
+  color: string
+  material: string
+  image: {
+    id: number
+    image_url: string
+    alt_text: string
+  }
+}
+
+const furnitures = ref<Furniture[]>([])
+
+const selectedColor = ref<number | null>(null)
+const selectedType = ref<number | null>(null)
+const selectedMaterial = ref<number | null>(null)
+
+const colors = ref<Color[]>([])
+const types = ref<Type[]>([])
+const materials = ref<Material[]>([])
+
+const filteredFurnitures = computed(() => furnitures.value)
+
+async function getFurniture() {
+  try {
+    const response = await fetch(`${API_URL}/user/furnitures`, {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + authStore.token,
+      },
+    })
+    if (!response.ok) throw new Error('Erreur lors du fetch des meubles')
+
+    furnitures.value = await response.json()
+    console.log('📦 Meubles reçus :', furnitures.value)
+  } catch (err) {
+    console.error('❌ Erreur chargement des meubles :', err)
+  }
+}
+
+async function filterFurniture(material: number | null, color: number | null, type: number | null) {
+  try {
+    const materialId = material ?? 'all'
+    const colorId = color ?? 'all'
+    const typeId = type ?? 'all'
+
+    const response = await fetch(
+      `${API_URL}/user/furnitures/filter/${materialId}/${colorId}/${typeId}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${authStore.token}`,
+        },
+      },
+    )
+    if (!response.ok) throw new Error('Erreur filtre meubles')
+
+    furnitures.value = await response.json()
+    console.log('🎯 Meubles filtrés :', furnitures.value)
+  } catch (err) {
+    console.error('❌ Erreur filtre meubles :', err)
+  }
+}
+
+async function getColorFurniture() {
+  try {
+    const response = await fetch(`${API_URL}/color`)
+    const data = await response.json()
+    colors.value = data.sort((a: Color, b: Color) => a.name.localeCompare(b.name, 'fr'))
+  } catch (e) {
+    console.error('❌ Erreur couleurs :', e)
+  }
+}
+
+async function getTypeFurniture() {
+  try {
+    const response = await fetch(`${API_URL}/type`)
+    const data = await response.json()
+    types.value = data.sort((a: Type, b: Type) => a.name.localeCompare(b.name, 'fr'))
+  } catch (e) {
+    console.error('❌ Erreur types :', e)
+  }
+}
+
+async function getMaterialFurniture() {
+  try {
+    const response = await fetch(`${API_URL}/material`)
+    const data = await response.json()
+    materials.value = data.sort((a: Material, b: Material) => a.name.localeCompare(b.name, 'fr'))
+  } catch (e) {
+    console.error('❌ Erreur matériaux :', e)
+  }
+}
+
+watch([selectedMaterial, selectedColor, selectedType], ([newMat, newColor, newType]) => {
+  if (newMat !== null || newColor !== null || newType !== null) {
+    filterFurniture(newMat, newColor, newType)
+  } else {
+    getFurniture()
+  }
+})
+
+onMounted(() => {
+  getFurniture()
+  getColorFurniture()
+  getTypeFurniture()
+  getMaterialFurniture()
+})
 
 function goToAddFurniture() {
   router.push('furniture/add/sell')
@@ -16,14 +154,37 @@ function goToAddFurniture() {
   <div class="bg-[#FFF5E1]">
     <HeaderCompo />
     <MenuCompo />
+
     <button
       class="m-2 block mx-auto cursor-pointer border border-[#635950] rounded px-4 py-2 bg-[#A45338] text-[#FFF5E1] font-[Anta] hover:bg-[#8a3e27] transition"
-      type="button"
       @click="goToAddFurniture"
     >
       Vendre un meuble
     </button>
-    <FlashInfosFurniture />
+
+    <!-- FILTRES -->
+    <div class="flex flex-row bg-[#FFF5E1] gap-5 justify-center items-center">
+      <p class="font-[Anta] text-[#A45338] text-[1.2rem]">Filtrer par :</p>
+
+      <FilterTypeColorMaterialCompo
+        elementAFiltrer="Matériaux"
+        v-model="selectedMaterial"
+        :elements="materials"
+      />
+      <FilterTypeColorMaterialCompo
+        elementAFiltrer="Couleurs"
+        v-model="selectedColor"
+        :elements="colors"
+      />
+      <FilterTypeColorMaterialCompo
+        elementAFiltrer="Types de meuble"
+        v-model="selectedType"
+        :elements="types"
+      />
+    </div>
+
+    <!-- LISTE MEUBLES -->
+    <FlashInfosFurniture :furnitures="filteredFurnitures" />
   </div>
 
   <FooterCompo />
