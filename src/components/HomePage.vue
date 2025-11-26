@@ -2,7 +2,6 @@
 import { onMounted, ref, watch, computed } from 'vue'
 
 import HeaderCompo from './HeaderCompo.vue'
-import MenuCompo from './MenuUser.vue'
 import FooterCompo from './FooterCompo.vue'
 import FlashInfosFurniture from './FlashInfosFurniture.vue'
 import FilterTypeColorMaterialCompo from './FilterTypeColorMaterialCompo.vue'
@@ -61,7 +60,6 @@ async function getFurniture() {
     if (!response.ok) throw new Error('Erreur lors du fetch des meubles')
 
     furnitures.value = await response.json()
-    console.log('📦 Meubles reçus :', furnitures.value)
   } catch (err) {
     console.error('❌ Erreur chargement des meubles :', err)
   }
@@ -73,13 +71,10 @@ async function filterFurniture(material: number | null, color: number | null, ty
     const colorId = color ?? 'all'
     const typeId = type ?? 'all'
 
-    const response = await fetch(
-      `${API_URL}/user/furnitures/filter/${materialId}/${colorId}/${typeId}`,
-    )
+    const response = await fetch(`${API_URL}/furnitures/filter/${materialId}/${colorId}/${typeId}`)
     if (!response.ok) throw new Error('Erreur filtre meubles')
 
     furnitures.value = await response.json()
-    console.log('🎯 Meubles filtrés :', furnitures.value)
   } catch (err) {
     console.error('❌ Erreur filtre meubles :', err)
   }
@@ -134,7 +129,6 @@ onMounted(() => {
 <template>
   <div class="bg-[#FFF5E1]">
     <HeaderCompo />
-    <MenuCompo />
 
     <div class="flex flex-row bg-[#FFF5E1] gap-5 justify-center items-center">
       <p class="font-[Anta] text-[#A45338] text-[1.2rem]">Filtrer par :</p>

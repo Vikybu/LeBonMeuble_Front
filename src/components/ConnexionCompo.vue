@@ -86,7 +86,7 @@ function goToHomepage() {
           <label class="text-[#FFF5E1] font-[Anta]" for="email">Email de connexion</label>
           <input
             v-model="user.email"
-            class="border border-[#FFF5E1] rounded px-3 py-2"
+            class="border border-[#FFF5E1] rounded px-3 py-2 text-[#FFF5E1] font-[Anta]"
             id="email"
             type="email"
           />

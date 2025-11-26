@@ -15,7 +15,7 @@ const user = ref({
   lastname: '',
   email: '',
   password: '',
-  role: 'USER',
+  role: 'user',
 })
 
 const URL = 'http://localhost:8080'
@@ -25,7 +25,7 @@ async function createUser() {
   if (!ValidateForm()) return
   if (!VerificationPassword()) return
 
-  const response = await fetch(`${URL}/user/create`, {
+  const response = await fetch(`${URL}/create`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(user.value),
@@ -41,6 +41,9 @@ async function createUser() {
       showPopUp("Un problème est survenu, merci d'essayer plus tard")
     }
   }
+  setTimeout(() => {
+    goToConnexionPage()
+  }, 2000)
 }
 
 function ValidateForm() {
@@ -74,6 +77,10 @@ function showPopUp(message: string) {
 
 function goToHomepage() {
   router.push('/')
+}
+
+function goToConnexionPage() {
+  router.push('/connexion')
 }
 </script>
 

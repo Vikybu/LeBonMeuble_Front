@@ -90,6 +90,7 @@ async function modifyInfos() {
     console.error(error)
     showPopUp('❌ Erreur de communication avec le serveur.')
   }
+  passwordVerification.value = ''
 }
 
 function showPopUp(message: string): void {
