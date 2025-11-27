@@ -31,7 +31,7 @@ const URL = 'http://localhost:8080'
 const router = useRouter()
 
 function getToFurnitureDetails(id: number) {
-  router.push(`/user/furniture/${id}`)
+  router.push(`/user/furniture/Details/${id}`)
 }
 </script>
 

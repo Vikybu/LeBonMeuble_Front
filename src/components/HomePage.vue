@@ -127,32 +127,49 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-[#FFF5E1]">
+  <div class="min-h-screen flex flex-col bg-[#FFF5E1]">
+    <!-- Header -->
     <HeaderCompo />
 
-    <div class="flex flex-row bg-[#FFF5E1] gap-5 justify-center items-center">
-      <p class="font-[Anta] text-[#A45338] text-[1.2rem]">Filtrer par :</p>
+    <!-- MAIN -->
+    <main class="flex-1 flex flex-col min-h-0">
+      <!-- Barres de filtre -->
+      <div class="flex flex-row gap-5 justify-center items-center p-4">
+        <p class="font-[Anta] text-[#A45338] text-[1.2rem]">Filtrer par :</p>
 
-      <FilterTypeColorMaterialCompo
-        elementAFiltrer="Matériaux"
-        v-model="selectedMaterial"
-        :elements="materials"
-      />
-      <FilterTypeColorMaterialCompo
-        elementAFiltrer="Couleurs"
-        v-model="selectedColor"
-        :elements="colors"
-      />
-      <FilterTypeColorMaterialCompo
-        elementAFiltrer="Types de meuble"
-        v-model="selectedType"
-        :elements="types"
-      />
-    </div>
+        <FilterTypeColorMaterialCompo
+          elementAFiltrer="Matériaux"
+          v-model="selectedMaterial"
+          :elements="materials"
+        />
+        <FilterTypeColorMaterialCompo
+          elementAFiltrer="Couleurs"
+          v-model="selectedColor"
+          :elements="colors"
+        />
+        <FilterTypeColorMaterialCompo
+          elementAFiltrer="Types de meuble"
+          v-model="selectedType"
+          :elements="types"
+        />
+      </div>
 
-    <!-- LISTE MEUBLES -->
-    <FlashInfosFurniture :furnitures="filteredFurnitures" />
+      <!-- LISTE MEUBLES -->
+      <div class="flex-1 min-h-0 overflow-y-auto px-4 pb-6">
+        <!-- Aucun meuble trouvé -->
+        <div
+          v-if="filteredFurnitures.length === 0"
+          class="h-full flex items-center justify-center text-[#A45338] font-[Anta] text-xl"
+        >
+          Aucun meuble trouvé.
+        </div>
+
+        <!-- Liste -->
+        <FlashInfosFurniture v-else :furnitures="filteredFurnitures" />
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <FooterCompo />
   </div>
-
-  <FooterCompo />
 </template>

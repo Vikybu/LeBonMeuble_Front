@@ -51,15 +51,19 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-row">
+  <div class="min-h-screen flex flex-col bg-[#FFF5E1]">
     <HeaderCompoAdmin />
+    <div class="flex-none">
+      <MenuAdmin />
+    </div>
+    <main class="flex-1 overflow-y-auto p-4 space-y-4">
+      <FlashInfosStatusFurniture
+        v-for="furniture in furnitures"
+        :key="furniture.id"
+        :furniture="furniture"
+        @status-updated="getFurniture"
+      />
+    </main>
+    <FooterCompo />
   </div>
-  <MenuAdmin />
-  <FlashInfosStatusFurniture
-    v-for="furniture in furnitures"
-    :key="furniture.id"
-    :furniture="furniture"
-    @status-updated="getFurniture"
-  />
-  <FooterCompo />
 </template>

@@ -34,8 +34,17 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="bg-[#FFF5E1] p-4">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+  <div class="bg-[#FFF5E1] p-4 h-full flex flex-col">
+    <!-- 🔥 MESSAGE : aucun résultat -->
+    <div
+      v-if="props.furnitures.length === 0"
+      class="flex-1 flex items-center justify-center text-[#A45338] font-[Anta] text-xl text-center"
+    >
+      Aucun meuble trouvé pour ces filtres.
+    </div>
+
+    <!-- 🔥 LISTE DES MEUBLES -->
+    <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-8 flex-1">
       <div
         class="border border-[#A45338] rounded-xl p-4 flex items-center gap-6 shadow-md bg-[#FFF5E1]"
         v-for="furniture in props.furnitures"
@@ -52,17 +61,21 @@ const props = defineProps<{
           <p class="font-[Anta] text-[#635950] text-xl font-semibold">
             {{ furniture.name }}
           </p>
+
           <p class="font-[Anta] text-[#635950] line-clamp-2">
             {{ furniture.description }}
           </p>
+
           <p class="font-[Anta] text-[#635950] text-sm italic">
             Dimensions : {{ furniture.width }}x{{ furniture.height }}x{{ furniture.length }}
           </p>
+
           <h1 class="cursor-pointer font-[Anta] text-[#635950] text-2xl font-bold">
             {{ furniture.price }} €
           </h1>
+
           <p
-            class="cursor-pointer font-[Anta] text-[#635950] text-sm text-decoration-line: underline"
+            class="cursor-pointer font-[Anta] text-[#635950] text-sm underline"
             @click="getToFurnitureDetails(furniture.id)"
           >
             Voir plus d'informations sur le produit...

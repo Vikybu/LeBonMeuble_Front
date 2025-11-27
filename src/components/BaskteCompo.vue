@@ -7,7 +7,7 @@ const cart = useCartStore()
 const authStore = useAuthStore()
 
 async function payTheCard() {
-  const response = await fetch('http://localhost:8080/checkout', {
+  const response = await fetch(`${URL}/checkout`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

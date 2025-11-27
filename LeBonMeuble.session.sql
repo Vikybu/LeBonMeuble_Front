@@ -215,3 +215,14 @@ VALUES
 UPDATE user
 SET role = 'admin'
 WHERE id=12;
+
+-- @block
+INSERT INTO type (name, created_at, updated_at)
+VALUES 
+('Buffet', '2025-11-26', '2025-11-26')
+
+-- @block
+UPDATE furniture
+SET type_id = 22
+WHERE id=26;
+

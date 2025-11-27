@@ -14,6 +14,7 @@ import ModificationFurniture from '@/components/ModificationFurniture.vue'
 import UserBuyingPage from '@/components/UserBuyingPage.vue'
 import PaymentSucess from '@/components/PaymentSucess.vue'
 import PaymentCancel from '@/components/PaymentCancel.vue'
+import DetailsFurnitureUserPage from '@/components/DetailsFurnitureUserPage.vue'
 
 const routes = [
   // 🏠 Page d'accueil publique
@@ -51,6 +52,7 @@ const routes = [
       { path: 'furniture/on/sell/modify/:id', component: ModificationFurniture },
       { path: 'furniture/:id/modify', component: ModificationFurniture },
       { path: 'basket', component: UserBuyingPage },
+      { path: `furniture/Details/:id`, component: DetailsFurnitureUserPage },
     ],
   },
 
