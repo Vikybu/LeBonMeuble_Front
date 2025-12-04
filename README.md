@@ -1,48 +1,27 @@
 # LeBonMeuble_Front
 
-This template should help get you started developing with Vue 3 in Vite.
+Le Bon Meuble is an e-commerce website for buying and selling second-hand furniture. 
+Its unique feature is that the furniture is checked and approved by an administrator before being put up for sale.
 
-## Recommended IDE Setup
+Stack :
+Front : vue.js, typeScript, tailwind
+Back : java spring boot (here is the URL to the repository : 
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+Features :
+- JWT token authentification
+- Payement with the stripe API
+- 
 
-## Recommended Browser Setup
+Here are some images of the final result of the project :
+Home page - not connected
+<img width="947" height="371" alt="accueil_lebonmeuble" src="https://github.com/user-attachments/assets/5d1c839f-0828-45e1-866a-f7de30c616a5" />
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+Creation of an account : 
+<img width="949" height="451" alt="création_de_compte_lebonmeuble" src="https://github.com/user-attachments/assets/3cb4af80-fcb4-41bf-9635-3ff2901bd562" />
 
-## Type Support for `.vue` Imports in TS
+Furniture put up for sale by a user :
+<img width="949" height="452" alt="liste_meubles_lebonmeuble" src="https://github.com/user-attachments/assets/0ef0002b-bc4e-4684-82cf-511f5ae52dfc" />
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+Admin's home page : 
+<img width="947" height="449" alt="admin_lebonmeuble" src="https://github.com/user-attachments/assets/c3cdb83c-44b8-4c02-a33c-0d39dc56418c" />
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
