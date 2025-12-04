@@ -4,13 +4,13 @@ Le Bon Meuble is an e-commerce website for buying and selling second-hand furnit
 Its unique feature is that the furniture is checked and approved by an administrator before being put up for sale.
 
 Stack :
-Front : vue.js, typeScript, tailwind
-Back : java spring boot (here is the URL to the repository : 
+- Front : vue.js, typeScript, tailwind
+- Back : java spring boot (here is the URL to the repository : 
 
 Features :
 - JWT token authentification
 - Payement with the stripe API
-- 
+
 
 Here are some images of the final result of the project :
 Home page - not connected
